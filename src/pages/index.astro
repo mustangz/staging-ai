@@ -587,11 +587,11 @@ import Layout from '../layouts/Layout.astro';
       
       <!-- Billing Toggle -->
       <div class="flex items-center justify-center gap-4 mb-12">
-        <span id="monthly-label" class="text-gray-400">Miesięcznie</span>
-        <button id="billing-toggle" class="relative w-16 h-8 bg-primary/30 rounded-full transition-colors" onclick="toggleBilling()">
-          <span id="toggle-knob" class="absolute top-1 left-1 w-6 h-6 bg-primary rounded-full transition-transform"></span>
+        <span id="monthly-label" class="text-gray-400 cursor-pointer" id="monthly-click">Miesięcznie</span>
+        <button id="billing-toggle" type="button" class="relative w-16 h-8 bg-primary/30 rounded-full transition-colors cursor-pointer">
+          <span id="toggle-knob" class="absolute top-1 left-1 w-6 h-6 bg-primary rounded-full transition-transform duration-200"></span>
         </button>
-        <span id="yearly-label" class="text-white font-semibold">Rocznie <span class="text-primary text-sm">(-20%)</span></span>
+        <span id="yearly-label" class="text-white font-semibold cursor-pointer">Rocznie <span class="text-primary text-sm">(-20%)</span></span>
       </div>
       
       <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -1075,8 +1075,11 @@ import Layout from '../layouts/Layout.astro';
       document.getElementById('agency-per-render').textContent = (prices.agency / renders.agency).toFixed(2).replace('.', ',') + ' PLN za render';
     }
     
-    // Initialize toggle position
+    // Initialize toggle position and add event listener
     document.getElementById('toggle-knob').style.transform = 'translateX(32px)';
+    document.getElementById('billing-toggle').addEventListener('click', toggleBilling);
+    document.getElementById('monthly-label').addEventListener('click', function() { if (isYearly) toggleBilling(); });
+    document.getElementById('yearly-label').addEventListener('click', function() { if (!isYearly) toggleBilling(); });
     
     // ROI Calculator
     const priceInput = document.getElementById('price-input');
