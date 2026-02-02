@@ -1,0 +1,13 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 3D Cube / Isometric Box -->
+  <!-- Top face -->
+  <path d="M20 4L36 13V27L20 36L4 27V13L20 4Z" fill="none"/>
+  <path d="M20 4L36 13L20 22L4 13L20 4Z" fill="#22D3EE"/>
+  <!-- Left face -->
+  <path d="M4 13L20 22V36L4 27V13Z" fill="#0EA5E9"/>
+  <!-- Right face -->
+  <path d="M36 13L20 22V36L36 27V13Z" fill="#0284C7"/>
+  <!-- Inner lines for depth -->
+  <path d="M20 22V36" stroke="#0369A1" stroke-width="0.5"/>
+  <path d="M4 13L20 22L36 13" stroke="#0369A1" stroke-width="0.5" fill="none"/>
+</svg>
