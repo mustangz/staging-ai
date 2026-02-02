@@ -670,9 +670,9 @@ import Layout from '../layouts/Layout.astro';
             </li>
           </ul>
           
-          <a href="#waitlist" class="block w-full bg-primary hover:bg-primary-dark text-white font-bold px-6 py-4 rounded-xl transition-colors text-center">
+          <button onclick="openCheckout()" class="block w-full bg-primary hover:bg-primary-dark text-white font-bold px-6 py-4 rounded-xl transition-colors text-center cursor-pointer">
             Wybierz Pro →
-          </a>
+          </button>
           
           <!-- CONTINUITY HINT -->
           <p class="text-xs text-gray-500 mt-4 text-center">
@@ -896,6 +896,87 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </footer>
 
+  <!-- FAKE CHECKOUT MODAL (Pieter Levels Validation) -->
+  <div id="checkout-modal" class="fixed inset-0 z-[100] hidden">
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeCheckout()"></div>
+    
+    <!-- Modal -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md p-6">
+      <div id="checkout-form" class="bg-darker rounded-2xl border border-white/20 p-8">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-2xl font-bold">Zamów PRO</h3>
+          <button onclick="closeCheckout()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+        </div>
+        
+        <div class="bg-primary/10 border border-primary/30 rounded-xl p-4 mb-6">
+          <div class="flex justify-between items-center">
+            <span class="text-gray-300">StagingAI PRO</span>
+            <span class="text-xl font-bold text-primary">199 PLN/mies</span>
+          </div>
+        </div>
+        
+        <form id="fake-payment-form" class="space-y-4">
+          <div>
+            <label class="block text-sm text-gray-400 mb-2">Email</label>
+            <input type="email" required placeholder="twoj@email.pl" 
+              class="w-full px-4 py-3 bg-dark border border-white/20 rounded-lg text-white focus:border-primary focus:outline-none" />
+          </div>
+          
+          <div>
+            <label class="block text-sm text-gray-400 mb-2">Numer karty</label>
+            <input type="text" required placeholder="4242 4242 4242 4242" maxlength="19"
+              class="w-full px-4 py-3 bg-dark border border-white/20 rounded-lg text-white focus:border-primary focus:outline-none" />
+          </div>
+          
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm text-gray-400 mb-2">Data ważności</label>
+              <input type="text" required placeholder="MM/RR" maxlength="5"
+                class="w-full px-4 py-3 bg-dark border border-white/20 rounded-lg text-white focus:border-primary focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-sm text-gray-400 mb-2">CVC</label>
+              <input type="text" required placeholder="123" maxlength="4"
+                class="w-full px-4 py-3 bg-dark border border-white/20 rounded-lg text-white focus:border-primary focus:outline-none" />
+            </div>
+          </div>
+          
+          <button type="submit" 
+            class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-4 rounded-xl transition-colors mt-4">
+            💳 Zapłać 199 PLN
+          </button>
+          
+          <p class="text-xs text-gray-500 text-center mt-4">
+            🔒 Płatność zabezpieczona przez Stripe
+          </p>
+        </form>
+      </div>
+      
+      <!-- Success Message (hidden initially) -->
+      <div id="checkout-success" class="bg-darker rounded-2xl border border-primary/50 p-8 hidden">
+        <div class="text-center">
+          <div class="text-6xl mb-4">🚀</div>
+          <h3 class="text-2xl font-bold mb-4">Prawie gotowe!</h3>
+          <p class="text-gray-300 mb-6 leading-relaxed">
+            <strong class="text-primary">Nie pobraliśmy pieniędzy</strong> — StagingAI jest jeszcze w fazie beta.
+          </p>
+          <p class="text-gray-400 mb-6">
+            Ale widzimy że jesteś zainteresowany! Zapisaliśmy Twój email — 
+            <strong class="text-white">dostaniesz dostęp jako pierwszy</strong> gdy wystartujemy.
+          </p>
+          <div class="bg-primary/20 border border-primary/30 rounded-xl p-4 mb-6">
+            <p class="text-primary font-semibold">🎁 Bonus za zainteresowanie:</p>
+            <p class="text-white">10 darmowych renderów na start!</p>
+          </div>
+          <button onclick="closeCheckout()" class="bg-primary hover:bg-primary-dark text-white font-bold px-8 py-3 rounded-xl transition-colors">
+            Super, czekam! →
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ROI Calculator Script -->
   <script>
     const priceInput = document.getElementById('price-input');
@@ -945,5 +1026,59 @@ import Layout from '../layouts/Layout.astro';
     
     updateCountdown();
     setInterval(updateCountdown, 1000);
+    
+    // Fake Checkout Modal (Pieter Levels Validation Hack)
+    function openCheckout() {
+      document.getElementById('checkout-modal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      // Track: someone clicked "Buy"
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'begin_checkout', { value: 199, currency: 'PLN' });
+      }
+    }
+    
+    function closeCheckout() {
+      document.getElementById('checkout-modal').classList.add('hidden');
+      document.body.style.overflow = '';
+      // Reset form
+      document.getElementById('checkout-form').classList.remove('hidden');
+      document.getElementById('checkout-success').classList.add('hidden');
+    }
+    
+    document.getElementById('fake-payment-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const email = this.querySelector('input[type="email"]').value;
+      
+      // Send to Formspree (same as waitlist)
+      try {
+        await fetch('https://formspree.io/f/xyzyvvpp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            email: email, 
+            source: 'fake_checkout',
+            plan: 'PRO',
+            intent: 'would_pay_199'
+          })
+        });
+      } catch (err) {
+        console.log('Form submission error:', err);
+      }
+      
+      // Track: someone tried to pay
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'purchase_intent', { value: 199, currency: 'PLN' });
+      }
+      
+      // Show success message
+      document.getElementById('checkout-form').classList.add('hidden');
+      document.getElementById('checkout-success').classList.remove('hidden');
+    });
+    
+    // Close modal on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeCheckout();
+    });
   </script>
 </Layout>
