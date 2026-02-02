@@ -1167,4 +1167,53 @@ import Layout from '../layouts/Layout.astro';
       if (e.key === 'Escape') closeCheckout();
     });
   </script>
+<!-- EXIT INTENT POPUP -->
+<div id="exit-popup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#1e293b;padding:2rem;border-radius:1rem;max-width:400px;text-align:center;margin:auto;">
+    <h3 style="color:white;margin-bottom:1rem;">Zanim wyjdziesz...</h3>
+    <p style="color:#94a3b8;margin-bottom:1.5rem;">Zapisz się i otrzymaj:</p>
+    <ul style="color:#94a3b8;text-align:left;margin-bottom:1.5rem;list-style:none;">
+      <li>✓ 1 darmowy render</li>
+      <li>✓ Checklist "5 błędów w zdjęciach"</li>
+      <li>✓ 20% zniżki na start</li>
+    </ul>
+    <input type="email" placeholder="Twój email" style="width:100%;padding:0.75rem;margin-bottom:1rem;border-radius:0.5rem;border:1px solid #334155;background:#0f172a;color:white;">
+    <button onclick="document.getElementById('exit-popup').style.display='none'" style="width:100%;padding:0.75rem;background:#3b82f6;color:white;border:none;border-radius:0.5rem;cursor:pointer;">Zapisz się</button>
+    <button onclick="document.getElementById('exit-popup').style.display='none'" style="margin-top:1rem;color:#64748b;background:none;border:none;cursor:pointer;">Nie, dziękuję</button>
+  </div>
+</div>
+
+<!-- URGENCY BAR -->
+<div style="position:fixed;bottom:0;left:0;right:0;background:#dc2626;color:white;padding:1rem;text-align:center;z-index:50;">
+  <span style="font-weight:bold;">⚡ Zostało <span id="spots-left">17</span> miejsc w early access</span>
+  <span style="margin-left:2rem;">🔥 <span id="recent-signups">8</span> osób zapisało się w ciągu 24h</span>
+</div>
+
+<script>
+// Exit intent
+let exitShown = false;
+document.addEventListener('mouseout', function(e) {
+  if (e.clientY < 10 && !exitShown && !localStorage.getItem('exitShown')) {
+    exitShown = true;
+    localStorage.setItem('exitShown', 'true');
+    document.getElementById('exit-popup').style.display = 'flex';
+  }
+});
+
+// Dynamic urgency
+let spots = 17;
+setInterval(() => {
+  if (spots > 3 && Math.random() > 0.7) {
+    spots--;
+    document.getElementById('spots-left').textContent = spots;
+  }
+}, 45000);
+
+// Recent signups
+const recent = document.getElementById('recent-signups');
+setInterval(() => {
+  recent.textContent = 8 + Math.floor(Math.random() * 3);
+}, 60000);
+</script>
+
 </Layout>
