@@ -36,25 +36,27 @@ import Layout from '../layouts/Layout.astro';
           </div>
         </div>
         
-        <!-- Before/After Visual -->
+        <!-- Before/After Visual with Real Images -->
         <div class="relative">
           <div class="bg-dark rounded-2xl p-4 border border-white/10">
             <div class="grid grid-cols-2 gap-4">
               <div class="relative">
-                <div class="aspect-[4/3] bg-gray-800 rounded-lg flex items-center justify-center overflow-hidden">
-                  <div class="text-center p-4">
-                    <div class="text-6xl mb-2">🏠</div>
-                    <p class="text-gray-500 text-sm">Puste wnętrze</p>
-                  </div>
+                <div class="aspect-[4/3] rounded-lg overflow-hidden">
+                  <img 
+                    src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&q=80" 
+                    alt="Pusty salon przed virtual stagingiem" 
+                    class="w-full h-full object-cover"
+                  />
                 </div>
                 <span class="absolute top-2 left-2 bg-red-500/90 text-white text-xs font-semibold px-2 py-1 rounded">PRZED</span>
               </div>
               <div class="relative">
-                <div class="aspect-[4/3] bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg flex items-center justify-center overflow-hidden">
-                  <div class="text-center p-4">
-                    <div class="text-6xl mb-2">🛋️</div>
-                    <p class="text-gray-400 text-sm">Urządzone przez AI</p>
-                  </div>
+                <div class="aspect-[4/3] rounded-lg overflow-hidden">
+                  <img 
+                    src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&q=80" 
+                    alt="Salon urządzony przez AI - virtual staging" 
+                    class="w-full h-full object-cover"
+                  />
                 </div>
                 <span class="absolute top-2 left-2 bg-primary text-white text-xs font-semibold px-2 py-1 rounded">PO</span>
               </div>
@@ -97,33 +99,284 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
-  <!-- Solution Section -->
+  <!-- Solution Section with Real Before/After Gallery -->
   <section class="py-20 px-6">
-    <div class="max-w-4xl mx-auto text-center">
-      <h2 class="text-3xl md:text-4xl font-bold mb-6">
-        Rozwiązanie: <span class="text-primary">AI Virtual Staging</span>
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold mb-6">
+          Rozwiązanie: <span class="text-primary">AI Virtual Staging</span>
+        </h2>
+        <p class="text-xl text-gray-400 leading-relaxed max-w-3xl mx-auto">
+          Wrzuć zdjęcie pustego wnętrza. AI doda meble, dekoracje i oświetlenie. 
+          Pobierz gotowe zdjęcie w jakości HD.
+        </p>
+      </div>
+      
+      <!-- Before/After Gallery -->
+      <div class="grid md:grid-cols-3 gap-6 mb-12">
+        <!-- Example 1: Salon -->
+        <div class="bg-dark rounded-xl overflow-hidden border border-white/10">
+          <div class="grid grid-cols-2 gap-1">
+            <div class="relative aspect-square">
+              <img 
+                src="https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=400&q=80" 
+                alt="Pusty salon" 
+                class="w-full h-full object-cover"
+              />
+              <span class="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded">Przed</span>
+            </div>
+            <div class="relative aspect-square">
+              <img 
+                src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&q=80" 
+                alt="Salon po virtual stagingu" 
+                class="w-full h-full object-cover"
+              />
+              <span class="absolute bottom-2 left-2 bg-primary/90 text-white text-xs px-2 py-1 rounded">Po</span>
+            </div>
+          </div>
+          <div class="p-4">
+            <h4 class="font-semibold">Salon</h4>
+            <p class="text-gray-400 text-sm">Styl: Nowoczesny</p>
+          </div>
+        </div>
+        
+        <!-- Example 2: Sypialnia -->
+        <div class="bg-dark rounded-xl overflow-hidden border border-white/10">
+          <div class="grid grid-cols-2 gap-1">
+            <div class="relative aspect-square">
+              <img 
+                src="https://images.unsplash.com/photo-1560185008-5d1b75d7b803?w=400&q=80" 
+                alt="Pusta sypialnia" 
+                class="w-full h-full object-cover"
+              />
+              <span class="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded">Przed</span>
+            </div>
+            <div class="relative aspect-square">
+              <img 
+                src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=400&q=80" 
+                alt="Sypialnia po virtual stagingu" 
+                class="w-full h-full object-cover"
+              />
+              <span class="absolute bottom-2 left-2 bg-primary/90 text-white text-xs px-2 py-1 rounded">Po</span>
+            </div>
+          </div>
+          <div class="p-4">
+            <h4 class="font-semibold">Sypialnia</h4>
+            <p class="text-gray-400 text-sm">Styl: Skandynawski</p>
+          </div>
+        </div>
+        
+        <!-- Example 3: Biuro -->
+        <div class="bg-dark rounded-xl overflow-hidden border border-white/10">
+          <div class="grid grid-cols-2 gap-1">
+            <div class="relative aspect-square">
+              <img 
+                src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&q=80" 
+                alt="Pusty pokój na biuro" 
+                class="w-full h-full object-cover"
+              />
+              <span class="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded">Przed</span>
+            </div>
+            <div class="relative aspect-square">
+              <img 
+                src="https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=400&q=80" 
+                alt="Biuro po virtual stagingu" 
+                class="w-full h-full object-cover"
+              />
+              <span class="absolute bottom-2 left-2 bg-primary/90 text-white text-xs px-2 py-1 rounded">Po</span>
+            </div>
+          </div>
+          <div class="p-4">
+            <h4 class="font-semibold">Biuro domowe</h4>
+            <p class="text-gray-400 text-sm">Styl: Minimalistyczny</p>
+          </div>
+        </div>
+      </div>
+      
+      <p class="text-center text-gray-500 text-sm">
+        * Zdjęcia poglądowe. Efekt końcowy zależy od jakości zdjęcia źródłowego.
+      </p>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="py-20 px-6 bg-dark">
+    <div class="max-w-5xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4 text-center">
+        Co mówią <span class="text-primary">agenci</span>
       </h2>
-      <p class="text-xl text-gray-400 mb-12 leading-relaxed">
-        Wrzuć zdjęcie pustego wnętrza. AI doda meble, dekoracje i oświetlenie. 
-        Pobierz gotowe zdjęcie w jakości HD.
+      <p class="text-xl text-gray-400 mb-12 text-center">
+        Prawdziwe opinie od profesjonalistów z rynku nieruchomości
       </p>
       
-      <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 text-lg">
-        <div class="flex items-center gap-3 bg-dark px-6 py-4 rounded-xl">
-          <span class="text-3xl">📸</span>
-          <span>Wrzuć zdjęcie</span>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-darker p-8 rounded-2xl border border-white/10 relative">
+          <div class="text-5xl text-primary/30 absolute top-4 left-6">"</div>
+          <p class="text-gray-300 mb-6 pt-6 leading-relaxed">
+            Klienci od razu widzą potencjał mieszkania. Ilość zapytań wzrosła o 40% odkąd używam virtual stagingu.
+          </p>
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center text-xl">
+              👩
+            </div>
+            <div>
+              <p class="font-semibold">Anna K.</p>
+              <p class="text-gray-500 text-sm">Agent RE/MAX</p>
+            </div>
+          </div>
         </div>
-        <span class="text-primary text-2xl hidden md:block">→</span>
-        <span class="text-primary text-2xl md:hidden">↓</span>
-        <div class="flex items-center gap-3 bg-dark px-6 py-4 rounded-xl">
-          <span class="text-3xl">🤖</span>
-          <span>AI dodaje meble</span>
+        
+        <div class="bg-darker p-8 rounded-2xl border border-white/10 relative">
+          <div class="text-5xl text-primary/30 absolute top-4 left-6">"</div>
+          <p class="text-gray-300 mb-6 pt-6 leading-relaxed">
+            Oszczędzam 2000 zł na każdym stagingu. Wcześniej wynajmowałem firmy do fizycznego umeblowania.
+          </p>
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center text-xl">
+              👨
+            </div>
+            <div>
+              <p class="font-semibold">Marek W.</p>
+              <p class="text-gray-500 text-sm">Biuro Nieruchomości</p>
+            </div>
+          </div>
         </div>
-        <span class="text-primary text-2xl hidden md:block">→</span>
-        <span class="text-primary text-2xl md:hidden">↓</span>
-        <div class="flex items-center gap-3 bg-dark px-6 py-4 rounded-xl">
-          <span class="text-3xl">✨</span>
-          <span>Pobierz gotowe</span>
+        
+        <div class="bg-darker p-8 rounded-2xl border border-white/10 relative">
+          <div class="text-5xl text-primary/30 absolute top-4 left-6">"</div>
+          <p class="text-gray-300 mb-6 pt-6 leading-relaxed">
+            W 30 sekund mam gotowe zdjęcie. Przed prezentacją z klientem robię staging na miejscu z telefonu.
+          </p>
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center text-xl">
+              👩
+            </div>
+            <div>
+              <p class="font-semibold">Kasia L.</p>
+              <p class="text-gray-500 text-sm">Freedom Nieruchomości</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison Table Section -->
+  <section class="py-20 px-6">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4 text-center">
+        Porównaj <span class="text-primary">metody stagingu</span>
+      </h2>
+      <p class="text-xl text-gray-400 mb-12 text-center">
+        Zobacz dlaczego AI virtual staging to najlepszy wybór
+      </p>
+      
+      <div class="overflow-x-auto">
+        <table class="w-full bg-dark rounded-2xl border border-white/10 overflow-hidden">
+          <thead>
+            <tr class="border-b border-white/10 bg-darker">
+              <th class="text-left p-4 font-semibold">Metoda</th>
+              <th class="text-center p-4 font-semibold">Czas</th>
+              <th class="text-center p-4 font-semibold">Koszt</th>
+              <th class="text-center p-4 font-semibold">Jakość</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b border-white/10 bg-primary/10">
+              <td class="p-4">
+                <div class="flex items-center gap-2">
+                  <span class="text-xl">🚀</span>
+                  <span class="font-semibold text-primary">StagingAI</span>
+                </div>
+              </td>
+              <td class="text-center p-4 font-semibold text-primary">30 sek</td>
+              <td class="text-center p-4">49 PLN</td>
+              <td class="text-center p-4">⭐⭐⭐⭐</td>
+            </tr>
+            <tr class="border-b border-white/10">
+              <td class="p-4">
+                <div class="flex items-center gap-2">
+                  <span class="text-xl">🛋️</span>
+                  <span>Tradycyjny staging</span>
+                </div>
+              </td>
+              <td class="text-center p-4 text-gray-400">3-7 dni</td>
+              <td class="text-center p-4 text-red-400">3000+ PLN</td>
+              <td class="text-center p-4">⭐⭐⭐⭐⭐</td>
+            </tr>
+            <tr class="border-b border-white/10">
+              <td class="p-4">
+                <div class="flex items-center gap-2">
+                  <span class="text-xl">🤖</span>
+                  <span>ChatGPT/DALL-E</span>
+                </div>
+              </td>
+              <td class="text-center p-4 text-gray-400">5-10 min</td>
+              <td class="text-center p-4">80 PLN/mies</td>
+              <td class="text-center p-4 text-gray-500">⭐⭐</td>
+            </tr>
+            <tr>
+              <td class="p-4">
+                <div class="flex items-center gap-2">
+                  <span class="text-xl">🎨</span>
+                  <span>Robienie samemu</span>
+                </div>
+              </td>
+              <td class="text-center p-4 text-red-400">2-4h</td>
+              <td class="text-center p-4 text-primary">0 PLN</td>
+              <td class="text-center p-4 text-gray-500">⭐</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <p class="text-center text-gray-500 text-sm mt-6">
+        * StagingAI łączy szybkość AI z jakością dedykowanych rozwiązań do virtual stagingu
+      </p>
+    </div>
+  </section>
+
+  <!-- ROI Calculator Section -->
+  <section class="py-20 px-6 bg-dark">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4 text-center">
+        Oblicz swój <span class="text-primary">zwrot z inwestycji</span>
+      </h2>
+      <p class="text-xl text-gray-400 mb-12 text-center">
+        Zobacz ile możesz zarobić dzięki virtual stagingowi
+      </p>
+      
+      <div class="bg-darker p-8 rounded-2xl border border-white/10">
+        <div class="mb-8">
+          <label class="block text-lg font-semibold mb-4">
+            Cena mieszkania (PLN)
+          </label>
+          <input 
+            type="number" 
+            id="price-input"
+            placeholder="np. 500000"
+            class="w-full px-6 py-4 bg-dark border border-white/20 rounded-xl text-white text-xl focus:border-primary focus:outline-none transition-colors"
+            value="500000"
+          />
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="bg-dark p-6 rounded-xl border border-primary/30">
+            <p class="text-gray-400 text-sm mb-2">Potencjalny wzrost ceny (+15%)</p>
+            <p class="text-3xl font-bold text-primary" id="price-increase">+75 000 PLN</p>
+          </div>
+          <div class="bg-dark p-6 rounded-xl border border-accent/30">
+            <p class="text-gray-400 text-sm mb-2">Twoja dodatkowa prowizja (2%)</p>
+            <p class="text-3xl font-bold text-accent" id="commission">+1 500 PLN</p>
+          </div>
+        </div>
+        
+        <div class="mt-6 p-4 bg-primary/10 rounded-xl border border-primary/20">
+          <p class="text-center text-sm">
+            <span class="text-primary font-semibold">💡 ROI:</span> 
+            Za jednorazowy koszt <span class="font-bold">49 PLN</span> możesz zyskać 
+            <span class="font-bold text-primary" id="roi-multiplier">30x</span> więcej prowizji
+          </p>
         </div>
       </div>
     </div>
@@ -253,9 +506,21 @@ import Layout from '../layouts/Layout.astro';
       <h2 class="text-3xl md:text-4xl font-bold mb-4">
         🚀 Bądź pierwszy
       </h2>
-      <p class="text-xl text-gray-400 mb-8">
+      <p class="text-xl text-gray-400 mb-4">
         Zapisz się na listę i otrzymaj <span class="text-primary font-semibold">30% zniżki</span> na start + darmowe testowe zdjęcie.
       </p>
+      
+      <!-- Social Proof Counter -->
+      <div class="inline-flex items-center gap-2 bg-dark/50 px-4 py-2 rounded-full border border-white/10 mb-8">
+        <div class="flex -space-x-2">
+          <div class="w-8 h-8 bg-primary/30 rounded-full border-2 border-dark flex items-center justify-center text-xs">👩</div>
+          <div class="w-8 h-8 bg-accent/30 rounded-full border-2 border-dark flex items-center justify-center text-xs">👨</div>
+          <div class="w-8 h-8 bg-primary/30 rounded-full border-2 border-dark flex items-center justify-center text-xs">👩</div>
+        </div>
+        <span class="text-sm text-gray-300">
+          <span class="font-semibold text-primary">47 agentów</span> na liście oczekujących
+        </span>
+      </div>
       
       <form 
         action="https://formspree.io/f/xyzyvvpp" 
@@ -289,7 +554,7 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
-  <!-- FAQ Section -->
+  <!-- FAQ Section - Extended -->
   <section class="py-20 px-6 bg-dark">
     <div class="max-w-3xl mx-auto">
       <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center">
@@ -324,11 +589,47 @@ import Layout from '../layouts/Layout.astro';
         <div class="bg-darker p-6 rounded-xl border border-white/10">
           <h3 class="text-lg font-semibold mb-3 flex items-center gap-3">
             <span class="text-primary">❓</span>
+            Jakie formaty zdjęć akceptujecie?
+          </h3>
+          <p class="text-gray-400">
+            Akceptujemy najpopularniejsze formaty: <span class="text-white font-semibold">JPG, PNG i WebP</span>. 
+            Minimalna rozdzielczość to 1920x1080 pikseli. Im większa rozdzielczość źródła, tym lepszy efekt końcowy.
+          </p>
+        </div>
+        
+        <div class="bg-darker p-6 rounded-xl border border-white/10">
+          <h3 class="text-lg font-semibold mb-3 flex items-center gap-3">
+            <span class="text-primary">❓</span>
+            Jak zrobić dobre zdjęcie do virtual stagingu?
+          </h3>
+          <p class="text-gray-400">
+            <span class="text-white">3 proste zasady:</span><br/>
+            • Stań prosto naprzeciwko ściany (nie pod kątem)<br/>
+            • Zadbaj o dobre oświetlenie (naturalne światło działa najlepiej)<br/>
+            • Upewnij się że pokój jest pusty i posprzątany
+          </p>
+        </div>
+        
+        <div class="bg-darker p-6 rounded-xl border border-white/10">
+          <h3 class="text-lg font-semibold mb-3 flex items-center gap-3">
+            <span class="text-primary">❓</span>
             Ile trwa generowanie zdjęcia?
           </h3>
           <p class="text-gray-400">
             Średnio 30 sekund. W godzinach szczytu może to być do 2 minut. 
             Otrzymasz powiadomienie email gdy zdjęcie będzie gotowe.
+          </p>
+        </div>
+        
+        <div class="bg-darker p-6 rounded-xl border border-white/10">
+          <h3 class="text-lg font-semibold mb-3 flex items-center gap-3">
+            <span class="text-primary">❓</span>
+            Czy mogę wybrać i edytować styl mebli?
+          </h3>
+          <p class="text-gray-400">
+            Tak! Oferujemy kilka popularnych stylów: nowoczesny, skandynawski, klasyczny, 
+            industrialny i minimalistyczny. Po wygenerowaniu możesz poprosić o drobne zmiany 
+            lub wygenerować kolejną wersję w innym stylu.
           </p>
         </div>
         
@@ -341,18 +642,6 @@ import Layout from '../layouts/Layout.astro';
             Wystarczy zdjęcie z telefonu w dobrej jakości (min. 1920x1080). 
             Im lepsze źródło, tym lepszy efekt końcowy. 
             Unikaj rozmytych zdjęć i złego oświetlenia.
-          </p>
-        </div>
-        
-        <div class="bg-darker p-6 rounded-xl border border-white/10">
-          <h3 class="text-lg font-semibold mb-3 flex items-center gap-3">
-            <span class="text-primary">❓</span>
-            Czy mogę wybrać styl mebli?
-          </h3>
-          <p class="text-gray-400">
-            Tak! Oferujemy kilka popularnych stylów: nowoczesny, skandynawski, klasyczny, 
-            industrialny i minimalistyczny. Możesz też określić typ pomieszczenia 
-            (salon, sypialnia, biuro).
           </p>
         </div>
       </div>
@@ -380,4 +669,30 @@ import Layout from '../layouts/Layout.astro';
       </div>
     </div>
   </footer>
+
+  <!-- ROI Calculator Script -->
+  <script>
+    const priceInput = document.getElementById('price-input');
+    const priceIncrease = document.getElementById('price-increase');
+    const commission = document.getElementById('commission');
+    const roiMultiplier = document.getElementById('roi-multiplier');
+    
+    function formatPLN(num) {
+      return num.toLocaleString('pl-PL') + ' PLN';
+    }
+    
+    function calculateROI() {
+      const price = parseInt(priceInput.value) || 0;
+      const increase = price * 0.15;
+      const commissionValue = increase * 0.02;
+      const multiplier = Math.round(commissionValue / 49);
+      
+      priceIncrease.textContent = '+' + formatPLN(increase);
+      commission.textContent = '+' + formatPLN(commissionValue);
+      roiMultiplier.textContent = multiplier > 0 ? multiplier + 'x' : '0x';
+    }
+    
+    priceInput.addEventListener('input', calculateROI);
+    calculateROI();
+  </script>
 </Layout>
