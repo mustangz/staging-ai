@@ -581,9 +581,14 @@ import Layout from '../layouts/Layout.astro';
       <h2 class="text-3xl md:text-4xl font-bold mb-4">
         Wybierz swój plan
       </h2>
-      <p class="text-xl text-gray-400 mb-12">
+      <p class="text-xl text-gray-400 mb-8">
         Zacznij za darmo lub odblokuj pełną moc
       </p>
+      
+      <!-- Billing info -->
+      <div class="inline-flex items-center gap-2 bg-green-500/20 text-green-400 text-sm px-4 py-2 rounded-full mb-8">
+        💰 Ceny przy płatności rocznej (oszczędź 20%)
+      </div>
       
       <div class="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
         <!-- FREE Plan -->
@@ -626,11 +631,11 @@ import Layout from '../layouts/Layout.astro';
           </span>
           <h3 class="text-2xl font-bold mb-2 mt-2">PRO</h3>
           <div class="flex items-baseline justify-center gap-3 mb-2">
-            <span class="text-2xl text-gray-500 line-through">285 PLN</span>
-            <span class="text-5xl font-extrabold text-primary">199</span>
+            <span class="text-2xl text-gray-500 line-through">249 PLN</span>
+            <span class="text-5xl font-extrabold text-primary">149</span>
             <span class="text-lg text-gray-400 font-normal">PLN/mies</span>
           </div>
-          <p class="text-sm text-gray-500 mb-2">tylko 9,95 PLN za render</p>
+          <p class="text-sm text-gray-500 mb-2">Płatność roczna (1 788 PLN/rok)</p>
           
           <!-- Countdown Timer -->
           <div class="bg-dark/50 rounded-lg p-3 mb-6">
