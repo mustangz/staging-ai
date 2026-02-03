@@ -285,102 +285,78 @@ import Layout from '../layouts/Layout.astro';
   </section>
 
   <!-- ============================================
-       SECTION 5: SOCIAL PROOF
+       SECTION 5: EARLY ADOPTERS
        ============================================ -->
   <section class="py-24 px-6">
     <div class="max-w-6xl mx-auto">
       <!-- Header -->
       <div class="text-center mb-12">
+        <div class="inline-flex items-center gap-2 badge badge-accent mb-6">
+          <span class="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse"></span>
+          Szukamy pierwszych użytkowników
+        </div>
         <h2 class="heading-section mb-4">
-          Zaufali nam <span class="gradient-text">liderzy rynku</span>
+          Dołącz jako <span class="gradient-text">early adopter</span>
         </h2>
         <p class="body-large max-w-xl mx-auto">
-          Ponad <span class="text-white font-semibold">2,100 agentów</span> z 340 biur nieruchomości korzysta z WnętrzeAI
+          Szukamy <span class="text-white font-semibold">pierwszych 10 agentów</span> do beta testów. 
+          Pomóż kształtować produkt i zyskaj dożywotni dostęp ze zniżką.
         </p>
       </div>
       
-      <!-- Logo Grid -->
-      <div class="logo-grid mb-16">
-        <div class="logo-item text-lg font-bold text-[#52525b]">RE/MAX</div>
-        <div class="logo-item text-lg font-bold text-[#52525b]">Freedom</div>
-        <div class="logo-item text-lg font-bold text-[#52525b]">Metrohouse</div>
-        <div class="logo-item text-lg font-bold text-[#52525b]">Open House</div>
-        <div class="logo-item text-lg font-bold text-[#52525b]">Masters</div>
-        <div class="logo-item text-lg font-bold text-[#52525b]">Miller</div>
-      </div>
-      
-      <!-- Testimonials -->
-      <div class="grid md:grid-cols-3 gap-6">
-        <!-- Testimonial 1 -->
-        <div class="card-gradient relative">
-          <div class="quote-mark absolute -top-2 left-4">"</div>
-          <p class="text-[#a1a1aa] mb-6 pt-4 relative z-10">
-            Klienci od razu widzą potencjał mieszkania. Ilość zapytań <span class="text-white font-medium">wzrosła o 40%</span> odkąd używam virtual stagingu.
-          </p>
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-white font-semibold text-sm">
-              AK
-            </div>
-            <div>
-              <div class="font-medium text-sm">Anna Kowalska</div>
-              <div class="text-xs text-[#71717a]">Agent RE/MAX • 8 lat doświadczenia</div>
-            </div>
+      <!-- Benefits -->
+      <div class="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+        <!-- Benefit 1 -->
+        <div class="card-gradient text-center">
+          <div class="w-12 h-12 rounded-xl bg-violet-500/10 flex items-center justify-center mx-auto mb-4">
+            <svg class="w-6 h-6 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
+            </svg>
           </div>
+          <h3 class="heading-card mb-2">-50% na zawsze</h3>
+          <p class="body-small">
+            Early adopters otrzymują dożywotnią zniżkę 50% na każdy plan.
+          </p>
         </div>
         
-        <!-- Testimonial 2 -->
-        <div class="card-gradient relative">
-          <div class="quote-mark absolute -top-2 left-4">"</div>
-          <p class="text-[#a1a1aa] mb-6 pt-4 relative z-10">
-            Oszczędzam <span class="text-white font-medium">2000 zł</span> na każdym stagingu. Wcześniej wynajmowałem firmy do fizycznego umeblowania.
-          </p>
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white font-semibold text-sm">
-              MW
-            </div>
-            <div>
-              <div class="font-medium text-sm">Marek Wiśniewski</div>
-              <div class="text-xs text-[#71717a]">Właściciel biura • 50+ transakcji/rok</div>
-            </div>
+        <!-- Benefit 2 -->
+        <div class="card-gradient text-center">
+          <div class="w-12 h-12 rounded-xl bg-fuchsia-500/10 flex items-center justify-center mx-auto mb-4">
+            <svg class="w-6 h-6 text-fuchsia-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+            </svg>
           </div>
+          <h3 class="heading-card mb-2">Bezpośredni kontakt</h3>
+          <p class="body-small">
+            Twój feedback bezpośrednio wpływa na rozwój produktu. Masz głos.
+          </p>
         </div>
         
-        <!-- Testimonial 3 -->
-        <div class="card-gradient relative">
-          <div class="quote-mark absolute -top-2 left-4">"</div>
-          <p class="text-[#a1a1aa] mb-6 pt-4 relative z-10">
-            W 30 sekund mam gotowe zdjęcie. Przed prezentacją z klientem robię staging <span class="text-white font-medium">na miejscu z telefonu</span>.
-          </p>
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-white font-semibold text-sm">
-              KL
-            </div>
-            <div>
-              <div class="font-medium text-sm">Katarzyna Lewandowska</div>
-              <div class="text-xs text-[#71717a]">Agent Freedom • Top 10% w regionie</div>
-            </div>
+        <!-- Benefit 3 -->
+        <div class="card-gradient text-center">
+          <div class="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center mx-auto mb-4">
+            <svg class="w-6 h-6 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
           </div>
+          <h3 class="heading-card mb-2">Priorytetowy dostęp</h3>
+          <p class="body-small">
+            Pierwszeństwo w dostępie do nowych funkcji i aktualizacji.
+          </p>
         </div>
       </div>
       
-      <!-- Stats Row -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12">
-        <div class="text-center">
-          <div class="text-3xl font-bold gradient-text">87%</div>
-          <div class="text-xs text-[#71717a]">szybsza sprzedaż</div>
-        </div>
-        <div class="text-center">
-          <div class="text-3xl font-bold gradient-text">+15%</div>
-          <div class="text-xs text-[#71717a]">wyższa cena</div>
-        </div>
-        <div class="text-center">
-          <div class="text-3xl font-bold gradient-text">340+</div>
-          <div class="text-xs text-[#71717a]">biur partnerskich</div>
-        </div>
-        <div class="text-center">
-          <div class="text-3xl font-bold gradient-text">50K+</div>
-          <div class="text-xs text-[#71717a]">wygenerowanych zdjęć</div>
-        </div>
+      <!-- CTA -->
+      <div class="text-center mt-12">
+        <a href="#pricing" class="btn-primary inline-flex">
+          Zapisz się jako early adopter
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+          </svg>
+        </a>
+        <p class="text-xs text-[#52525b] mt-4">
+          Tylko 10 miejsc • Brak zobowiązań
+        </p>
       </div>
     </div>
   </section>
