@@ -199,7 +199,7 @@ import Layout from '../layouts/Layout.astro';
         </div>
         <div class="card-featured text-center">
           <p class="text-[#71717a] text-sm mb-1">WnętrzeAI</p>
-          <div class="text-4xl font-bold gradient-text">49 PLN</div>
+          <div class="text-4xl font-bold gradient-text" id="compare-price">49 PLN</div>
           <p class="text-sm text-violet-300 mt-1">Gotowe w 30 sekund</p>
         </div>
       </div>
@@ -422,10 +422,10 @@ import Layout from '../layouts/Layout.astro';
           
           <div class="mb-6">
             <div class="flex items-baseline gap-1">
-              <span id="starter-price" class="text-4xl font-bold">39</span>
+              <span id="starter-price" class="text-4xl font-bold">49</span>
               <span class="text-[#71717a]">PLN/mies</span>
             </div>
-            <p id="starter-per" class="text-xs text-[#52525b] mt-1">3,90 PLN za render</p>
+            <p id="starter-per" class="text-xs text-[#52525b] mt-1">4,90 PLN za render</p>
           </div>
           
           <ul class="space-y-3 mb-8 flex-grow">
@@ -455,9 +455,9 @@ import Layout from '../layouts/Layout.astro';
             </li>
           </ul>
           
-          <a href="#cta" class="btn-secondary w-full">
-            Wybierz Starter
-          </a>
+          <button class="btn-secondary w-full checkout-btn" data-plan="Starter" data-price="49">
+            Wybieram Starter
+          </button>
         </div>
         
         <!-- Pro - Featured -->
@@ -475,10 +475,10 @@ import Layout from '../layouts/Layout.astro';
           
           <div class="mb-6">
             <div class="flex items-baseline gap-1">
-              <span id="pro-price" class="text-4xl font-bold gradient-text">79</span>
+              <span id="pro-price" class="text-4xl font-bold gradient-text">99</span>
               <span class="text-[#71717a]">PLN/mies</span>
             </div>
-            <p id="pro-per" class="text-xs text-[#52525b] mt-1">1,58 PLN za render</p>
+            <p id="pro-per" class="text-xs text-[#52525b] mt-1">1,98 PLN za render</p>
           </div>
           
           <ul class="space-y-3 mb-8 flex-grow">
@@ -514,12 +514,12 @@ import Layout from '../layouts/Layout.astro';
             </li>
           </ul>
           
-          <a href="#cta" class="btn-primary w-full">
-            Wybierz Pro
+          <button class="btn-primary w-full checkout-btn" data-plan="Pro" data-price="99">
+            Wybieram Pro
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
             </svg>
-          </a>
+          </button>
         </div>
         
         <!-- Agency -->
@@ -570,9 +570,9 @@ import Layout from '../layouts/Layout.astro';
             </li>
           </ul>
           
-          <a href="#cta" class="btn-secondary w-full">
-            Wybierz Agency
-          </a>
+          <button class="btn-secondary w-full checkout-btn" data-plan="Agency" data-price="199">
+            Wybieram Agency
+          </button>
         </div>
       </div>
       
@@ -752,14 +752,190 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </footer>
 
+  <!-- ============================================
+       CHECKOUT MODAL
+       ============================================ -->
+  <div id="checkout-modal" class="modal-backdrop hidden">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-xl font-bold">Zamówienie <span id="modal-plan-name" class="gradient-text"></span></h3>
+        <button id="modal-close" class="text-[#71717a] hover:text-white transition-colors">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Form -->
+      <form id="checkout-form" class="space-y-4">
+        <!-- Plan Summary -->
+        <div class="bg-[#12121a] rounded-xl p-4 border border-white/[0.08]">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-[#a1a1aa]">Plan</span>
+            <span id="modal-plan" class="font-medium"></span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-[#a1a1aa]">Cena</span>
+            <span id="modal-price" class="text-xl font-bold gradient-text"></span>
+          </div>
+        </div>
+
+        <!-- Name -->
+        <div>
+          <label class="block text-sm text-[#a1a1aa] mb-2">Imię i nazwisko</label>
+          <input 
+            type="text" 
+            name="name" 
+            placeholder="Jan Kowalski"
+            required
+            class="input"
+          />
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label class="block text-sm text-[#a1a1aa] mb-2">Email</label>
+          <input 
+            type="email" 
+            name="email" 
+            placeholder="jan@example.com"
+            required
+            class="input"
+          />
+        </div>
+
+        <!-- Card Number -->
+        <div>
+          <label class="block text-sm text-[#a1a1aa] mb-2">Numer karty</label>
+          <div class="relative">
+            <input 
+              type="text" 
+              name="card" 
+              placeholder="4242 4242 4242 4242"
+              maxlength="19"
+              class="input pl-12"
+            />
+            <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#71717a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Card Details -->
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm text-[#a1a1aa] mb-2">Data ważności</label>
+            <input 
+              type="text" 
+              name="expiry" 
+              placeholder="MM/RR"
+              maxlength="5"
+              class="input"
+            />
+          </div>
+          <div>
+            <label class="block text-sm text-[#a1a1aa] mb-2">CVC</label>
+            <input 
+              type="text" 
+              name="cvc" 
+              placeholder="123"
+              maxlength="3"
+              class="input"
+            />
+          </div>
+        </div>
+
+        <!-- Hidden Fields -->
+        <input type="hidden" name="plan" id="form-plan" />
+        <input type="hidden" name="price" id="form-price" />
+        <input type="hidden" name="variant" id="form-variant" />
+
+        <!-- Submit Button -->
+        <button 
+          type="submit"
+          id="pay-button"
+          class="btn-primary w-full"
+        >
+          <span id="pay-button-text">Zapłać</span>
+          <svg id="pay-button-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+          </svg>
+        </button>
+
+        <!-- Security Note -->
+        <p class="text-xs text-[#52525b] text-center">
+          🔒 To demo. Karta nie zostanie obciążona.
+        </p>
+      </form>
+
+      <!-- Success State -->
+      <div id="modal-success" class="hidden text-center py-8">
+        <div class="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+        </div>
+        <h4 class="text-xl font-bold mb-2">🎉 Produkt w budowie!</h4>
+        <p class="text-[#a1a1aa]">
+          Zapisaliśmy Cię na listę early access. Powiadomimy gdy będzie gotowy.
+        </p>
+      </div>
+
+      <!-- Loading State -->
+      <div id="modal-loading" class="hidden text-center py-12">
+        <div class="w-12 h-12 border-3 border-violet-500/30 border-t-violet-500 rounded-full animate-spin mx-auto mb-4"></div>
+        <p class="text-[#a1a1aa]">Przetwarzanie płatności...</p>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script is:inline>
-    // Pricing Toggle
-    const pricing = {
-      monthly: { starter: 49, pro: 99, agency: 249 },
-      yearly: { starter: 39, pro: 79, agency: 199 }
+    // ==========================================
+    // A/B/C PRICING VARIANTS
+    // ==========================================
+    const pricingVariants = {
+      A: { starter: 49, pro: 99, agency: 199 },
+      B: { starter: 69, pro: 129, agency: 249 },
+      C: { starter: 99, pro: 199, agency: 299 }
     };
-    const renders = { starter: 10, pro: 50, agency: 300 };
+
+    // Get or assign variant
+    function getVariant() {
+      let variant = localStorage.getItem('wnetrzeai_variant');
+      if (!variant) {
+        const variants = ['A', 'B', 'C'];
+        variant = variants[Math.floor(Math.random() * variants.length)];
+        localStorage.setItem('wnetrzeai_variant', variant);
+      }
+      return variant;
+    }
+
+    const currentVariant = getVariant();
+    const prices = pricingVariants[currentVariant];
+
+    // Update prices on page
+    function updatePrices() {
+      document.getElementById('starter-price').textContent = prices.starter;
+      document.getElementById('pro-price').textContent = prices.pro;
+      document.getElementById('agency-price').textContent = prices.agency;
+      document.getElementById('compare-price').textContent = prices.starter + ' PLN';
+      
+      document.getElementById('starter-per').textContent = (prices.starter / 10).toFixed(2).replace('.', ',') + ' PLN za render';
+      document.getElementById('pro-per').textContent = (prices.pro / 50).toFixed(2).replace('.', ',') + ' PLN za render';
+      document.getElementById('agency-per').textContent = (prices.agency / 300).toFixed(2).replace('.', ',') + ' PLN za render';
+
+      // Update checkout button prices
+      document.querySelectorAll('.checkout-btn').forEach(btn => {
+        const plan = btn.dataset.plan.toLowerCase();
+        btn.dataset.price = prices[plan];
+      });
+    }
+
+    // ==========================================
+    // BILLING TOGGLE
+    // ==========================================
     let isYearly = true;
     
     document.getElementById('billing-toggle').addEventListener('click', function() {
@@ -778,24 +954,154 @@ import Layout from '../layouts/Layout.astro';
         yearlyLabel.className = 'text-sm text-[#a1a1aa]';
         yearlyLabel.innerHTML = 'Rocznie';
       }
-      
-      const prices = isYearly ? pricing.yearly : pricing.monthly;
-      
-      document.getElementById('starter-price').textContent = prices.starter;
-      document.getElementById('pro-price').textContent = prices.pro;
-      document.getElementById('agency-price').textContent = prices.agency;
-      
-      document.getElementById('starter-per').textContent = 
-        (prices.starter / renders.starter).toFixed(2).replace('.', ',') + ' PLN za render';
-      document.getElementById('pro-per').textContent = 
-        (prices.pro / renders.pro).toFixed(2).replace('.', ',') + ' PLN za render';
-      document.getElementById('agency-per').textContent = 
-        (prices.agency / renders.agency).toFixed(2).replace('.', ',') + ' PLN za render';
+
+      // Apply monthly multiplier
+      const multiplier = isYearly ? 0.8 : 1.25;
+      document.getElementById('starter-price').textContent = Math.round(prices.starter * multiplier);
+      document.getElementById('pro-price').textContent = Math.round(prices.pro * multiplier);
+      document.getElementById('agency-price').textContent = Math.round(prices.agency * multiplier);
     });
-    
-    // Initialize pricing
-    document.getElementById('starter-price').textContent = pricing.yearly.starter;
-    document.getElementById('pro-price').textContent = pricing.yearly.pro;
-    document.getElementById('agency-price').textContent = pricing.yearly.agency;
+
+    // ==========================================
+    // CHECKOUT MODAL
+    // ==========================================
+    const modal = document.getElementById('checkout-modal');
+    const modalContent = modal.querySelector('.modal-content');
+    const checkoutForm = document.getElementById('checkout-form');
+    const modalSuccess = document.getElementById('modal-success');
+    const modalLoading = document.getElementById('modal-loading');
+
+    // Open modal
+    document.querySelectorAll('.checkout-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const plan = btn.dataset.plan;
+        const price = btn.dataset.price;
+        const monthlyPrice = isYearly ? Math.round(price * 0.8) : price;
+        
+        document.getElementById('modal-plan-name').textContent = plan;
+        document.getElementById('modal-plan').textContent = plan;
+        document.getElementById('modal-price').textContent = monthlyPrice + ' PLN/mies';
+        document.getElementById('form-plan').value = plan;
+        document.getElementById('form-price').value = monthlyPrice;
+        document.getElementById('form-variant').value = currentVariant;
+        document.getElementById('pay-button-text').textContent = 'Zapłać ' + monthlyPrice + ' PLN';
+
+        modal.classList.remove('hidden');
+        setTimeout(() => modalContent.classList.add('modal-show'), 10);
+      });
+    });
+
+    // Close modal
+    function closeModal() {
+      modalContent.classList.remove('modal-show');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        checkoutForm.classList.remove('hidden');
+        modalSuccess.classList.add('hidden');
+        modalLoading.classList.add('hidden');
+        checkoutForm.reset();
+      }, 300);
+    }
+
+    document.getElementById('modal-close').addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    // Handle form submit
+    checkoutForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      checkoutForm.classList.add('hidden');
+      modalLoading.classList.remove('hidden');
+
+      // Simulate processing
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Submit to Formspree
+      const formData = new FormData(checkoutForm);
+      formData.append('_subject', 'Nowe zamówienie WnętrzeAI - ' + formData.get('plan'));
+      
+      try {
+        await fetch('https://formspree.io/f/xyzyvvpp', {
+          method: 'POST',
+          body: formData,
+          headers: { 'Accept': 'application/json' }
+        });
+      } catch (err) {
+        console.error('Formspree error:', err);
+      }
+
+      // Show success
+      modalLoading.classList.add('hidden');
+      modalSuccess.classList.remove('hidden');
+
+      // Close after 3 seconds
+      setTimeout(closeModal, 3000);
+    });
+
+    // Card number formatting
+    document.querySelector('input[name="card"]').addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\D/g, '');
+      value = value.substring(0, 16);
+      value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+      e.target.value = value;
+    });
+
+    // Expiry formatting
+    document.querySelector('input[name="expiry"]').addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length >= 2) {
+        value = value.substring(0, 2) + '/' + value.substring(2, 4);
+      }
+      e.target.value = value;
+    });
+
+    // Initialize
+    updatePrices();
   </script>
+
+  <style is:inline>
+    /* Modal Styles */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 10, 15, 0.8);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-backdrop.hidden {
+      display: none;
+    }
+
+    .modal-content {
+      background: #12121a;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      width: 100%;
+      max-width: 420px;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: scale(0.95) translateY(10px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .modal-content.modal-show {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+    }
+
+    .border-3 {
+      border-width: 3px;
+    }
+  </style>
 </Layout>
