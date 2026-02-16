@@ -1,0 +1,258 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import ImageUpload from "@/components/ImageUpload";
+import StyleSelector from "@/components/StyleSelector";
+import RoomTypeSelector from "@/components/RoomTypeSelector";
+import GenerationProgress from "@/components/GenerationProgress";
+import ResultView from "@/components/ResultView";
+
+type Stage = "upload" | "configure" | "generating" | "result";
+
+export default function StagingPage() {
+  const [stage, setStage] = useState<Stage>("upload");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [selectedStyle, setSelectedStyle] = useState<string | null>(null);
+  const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
+  const [resultUrl, setResultUrl] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleImageSelected = (file: File, url: string) => {
+    setImageFile(file);
+    setPreviewUrl(url);
+    setStage("configure");
+    setError(null);
+  };
+
+  const handleGenerate = async () => {
+    if (!imageFile || !selectedStyle || !selectedRoom) return;
+
+    setStage("generating");
+    setError(null);
+
+    try {
+      const formData = new FormData();
+      formData.append("image", imageFile);
+      formData.append("style", selectedStyle);
+      formData.append("roomType", selectedRoom);
+
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Generation failed");
+      }
+
+      setResultUrl(data.resultUrl);
+      setStage("result");
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Wystąpił błąd. Spróbuj ponownie."
+      );
+      setStage("configure");
+    }
+  };
+
+  const handleRegenerate = () => {
+    setResultUrl(null);
+    setStage("configure");
+  };
+
+  const handleStartOver = () => {
+    setImageFile(null);
+    setPreviewUrl(null);
+    setSelectedStyle(null);
+    setSelectedRoom(null);
+    setResultUrl(null);
+    setError(null);
+    setStage("upload");
+  };
+
+  const canGenerate = imageFile && selectedStyle && selectedRoom;
+
+  return (
+    <div className="min-h-screen">
+      {/* Navbar */}
+      <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-white/[0.08]">
+        <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+          <Link href="/" className="flex items-center gap-2 group">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center">
+              <svg
+                className="w-4 h-4 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                />
+              </svg>
+            </div>
+            <span className="text-xl font-bold tracking-tight">
+              Wnętrze<span className="gradient-ai">AI</span>
+            </span>
+          </Link>
+
+          {stage !== "upload" && (
+            <button onClick={handleStartOver} className="btn-ghost text-sm">
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+              Nowe zdjęcie
+            </button>
+          )}
+        </div>
+      </nav>
+
+      {/* Main content */}
+      <main className="max-w-3xl mx-auto px-6 pt-28 pb-16">
+        {/* Steps indicator */}
+        <div className="flex items-center justify-center gap-2 mb-10">
+          {["Zdjęcie", "Konfiguracja", "Generowanie", "Wynik"].map(
+            (label, i) => {
+              const stages: Stage[] = [
+                "upload",
+                "configure",
+                "generating",
+                "result",
+              ];
+              const currentIdx = stages.indexOf(stage);
+              const isActive = i <= currentIdx;
+              return (
+                <div key={label} className="flex items-center gap-2">
+                  {i > 0 && (
+                    <div
+                      className={`w-8 h-px ${isActive ? "bg-violet-400" : "bg-white/[0.08]"}`}
+                    />
+                  )}
+                  <div
+                    className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full ${
+                      isActive
+                        ? "bg-violet-500/10 text-violet-300 border border-violet-500/30"
+                        : "text-[#52525b] border border-white/[0.08]"
+                    }`}
+                  >
+                    <span>{i + 1}</span>
+                    <span className="hidden sm:inline">{label}</span>
+                  </div>
+                </div>
+              );
+            }
+          )}
+        </div>
+
+        {/* Upload stage */}
+        {stage === "upload" && (
+          <div className="animate-fade-in">
+            <div className="text-center mb-8">
+              <h1 className="heading-section mb-3">
+                Wgraj zdjęcie <span className="gradient-text">pokoju</span>
+              </h1>
+              <p className="body-large">
+                Zdjęcie pustego pomieszczenia — AI doda meble zachowując kształt
+                pokoju.
+              </p>
+            </div>
+            <ImageUpload onImageSelected={handleImageSelected} />
+          </div>
+        )}
+
+        {/* Configure stage */}
+        {stage === "configure" && previewUrl && (
+          <div className="animate-fade-in space-y-8">
+            <div className="card-gradient p-2">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={previewUrl}
+                alt="Wgrane zdjęcie"
+                className="w-full max-h-[300px] object-contain rounded-lg"
+              />
+            </div>
+
+            <RoomTypeSelector
+              selected={selectedRoom}
+              onSelect={setSelectedRoom}
+            />
+
+            <StyleSelector
+              selected={selectedStyle}
+              onSelect={setSelectedStyle}
+            />
+
+            {error && (
+              <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 text-sm text-red-300">
+                {error}
+              </div>
+            )}
+
+            <button
+              onClick={handleGenerate}
+              disabled={!canGenerate}
+              className={`btn-primary w-full ${!canGenerate ? "opacity-50 cursor-not-allowed" : "animate-pulse-glow"}`}
+            >
+              Wygeneruj staging
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
+              </svg>
+            </button>
+          </div>
+        )}
+
+        {/* Generating stage */}
+        {stage === "generating" && (
+          <div className="animate-fade-in">
+            <GenerationProgress />
+          </div>
+        )}
+
+        {/* Result stage */}
+        {stage === "result" && previewUrl && resultUrl && (
+          <div className="animate-fade-in">
+            <div className="text-center mb-6">
+              <h2 className="heading-section mb-2">
+                <span className="gradient-text">Gotowe!</span>
+              </h2>
+              <p className="body-large">
+                Przesuń suwak aby porównać przed i po.
+              </p>
+            </div>
+            <ResultView
+              beforeUrl={previewUrl}
+              afterUrl={resultUrl}
+              onRegenerate={handleRegenerate}
+            />
+          </div>
+        )}
+      </main>
+    </div>
+  );
+}
