@@ -68,6 +68,13 @@ export const ROOM_TYPES: RoomType[] = [
     stagingRoom: "Living Room",
   },
   {
+    id: "living-kitchen",
+    name: "Salon z aneksem",
+    icon: "🛋️🍳",
+    promptHint: "open-plan living room with kitchenette, sofa, coffee table, kitchen island or counter with stools, dining area",
+    stagingRoom: "Living Room",
+  },
+  {
     id: "bedroom",
     name: "Sypialnia",
     icon: "🛏️",

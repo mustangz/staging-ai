@@ -9,6 +9,7 @@ export async function POST(request: NextRequest) {
     const image = formData.get("image") as File | null;
     const styleId = formData.get("style") as string | null;
     const roomTypeId = formData.get("roomType") as string | null;
+    const customPrompt = (formData.get("customPrompt") as string | null) || undefined;
 
     if (!image || !styleId || !roomTypeId) {
       return NextResponse.json(
@@ -44,6 +45,7 @@ export async function POST(request: NextRequest) {
       roomType: roomType.promptHint,
       stagingStyle: style.stagingStyle,
       stagingRoom: roomType.stagingRoom,
+      customPrompt,
     });
 
     // Resize generated image to match original dimensions

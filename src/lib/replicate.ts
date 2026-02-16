@@ -9,6 +9,7 @@ const DEMO_MODE = process.env.DEMO_MODE === "true";
 // Sample staged room images for demo mode
 const DEMO_IMAGES: Record<string, string> = {
   "living-room": "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1024&q=90",
+  "living-kitchen": "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1024&q=90",
   "bedroom": "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=1024&q=90",
   "kitchen": "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1024&q=90",
   "bathroom": "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=1024&q=90",
@@ -22,118 +23,174 @@ export interface GenerateInput {
   roomType: string;
   stagingStyle: string;
   stagingRoom: string;
+  customPrompt?: string;
 }
 
-/** Helper to call Flux Kontext Pro with a prompt. Retries once on rate limit. */
-async function fluxEdit(imageUrl: string, prompt: string): Promise<string> {
-  for (let attempt = 0; attempt < 2; attempt++) {
-    try {
-      const output = (await replicate.run("black-forest-labs/flux-kontext-pro", {
-        input: {
-          prompt,
-          input_image: imageUrl,
-          aspect_ratio: "match_input_image",
-          output_format: "jpg",
-          safety_tolerance: 2,
-        },
-      })) as { url(): string } | string;
+/** Extract URL string from Replicate output (handles FileOutput, URL objects, strings). */
+function extractUrl(output: unknown): string {
+  if (typeof output === "string") return output;
+  if (output && typeof output === "object") {
+    if ("url" in output && typeof (output as Record<string, unknown>).url === "function") {
+      const urlResult = (output as { url(): unknown }).url();
+      if (typeof urlResult === "string") return urlResult;
+      if (urlResult && typeof urlResult === "object" && "href" in urlResult) {
+        return (urlResult as URL).href;
+      }
+      return String(urlResult);
+    }
+    if ("href" in output) return (output as URL).href;
+  }
+  throw new Error("Cannot extract URL from Replicate output");
+}
 
-      if (output && typeof output === "object" && "url" in output) {
-        return (output as { url(): string }).url();
-      }
-      if (typeof output === "string") {
-        return output;
-      }
+/** Wait helper with jitter */
+function wait(ms: number): Promise<void> {
+  const jitter = Math.random() * 2000;
+  return new Promise((r) => setTimeout(r, ms + jitter));
+}
+
+/** Generic Replicate run with rate-limit retry. */
+async function replicateRunWithRetry(
+  model: `${string}/${string}` | `${string}/${string}:${string}`,
+  input: Record<string, unknown>,
+  maxRetries = 4
+): Promise<string> {
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      const output = await replicate.run(model, { input });
+      return extractUrl(output);
     } catch (err: unknown) {
-      const isRateLimit = err instanceof Error && err.message.includes("429");
-      if (isRateLimit && attempt === 0) {
-        await new Promise((r) => setTimeout(r, 12000));
+      const msg = err instanceof Error ? err.message : "";
+      const isRateLimit = msg.includes("429") || msg.includes("throttled") || msg.includes("rate");
+      if (isRateLimit && attempt < maxRetries - 1) {
+        const delay = 15000 * (attempt + 1);
+        console.log(`Rate limited, waiting ${delay / 1000}s before retry ${attempt + 1}/${maxRetries}...`);
+        await wait(delay);
         continue;
       }
       throw err;
     }
   }
-  throw new Error("Flux Kontext Pro returned no output");
+  throw new Error("Replicate returned no output after retries");
+}
+
+/** Call Flux Kontext Pro with a prompt. */
+async function fluxEdit(imageUrl: string, prompt: string): Promise<string> {
+  return replicateRunWithRetry("black-forest-labs/flux-kontext-pro", {
+    prompt,
+    input_image: imageUrl,
+    aspect_ratio: "match_input_image",
+    output_format: "jpg",
+    safety_tolerance: 2,
+  });
 }
 
 /**
- * Step 1a: Remove only construction debris. Nothing else changes.
+ * Step 1: Clean room AND finish raw surfaces in a single Flux call.
  */
-async function cleanRoom(imageUrl: string, roomType: string): Promise<string> {
+async function cleanAndFinishRoom(imageUrl: string, roomType: string, customPrompt?: string): Promise<string> {
+  const userInstructions = customPrompt ? `\n\nADDITIONAL USER INSTRUCTIONS (follow these too): ${customPrompt}` : "";
   return fluxEdit(imageUrl,
-    `CRITICAL TASK: Remove ALL construction debris and building materials from this ${roomType}. The room must be COMPLETELY clean — no exceptions. Remove: ladders, scaffolding, buckets, paint cans, paint rollers, brushes, tools, toolboxes, trash bags, garbage, OSB boards, plywood sheets, drywall pieces, cardboard, plastic sheeting, drop cloths, cable spools, wire, tape, foam, insulation scraps, cement bags, sand, gravel, bricks, tiles stacked on floor, pipes lying around, and ANY other construction material or debris on the floor, leaning against walls, or anywhere in the room. The floor must be completely clear. Do NOT touch walls, partitions, columns, beams, windows, doors, pipes mounted on walls, radiators, or room structure — only remove loose objects and mess.`
-  );
-}
+    `ABSOLUTE RULES — NEVER BREAK THESE:
+- NEVER remove, move, or modify ANY wall, partition, or column. Every wall must stay exactly where it is.
+- NEVER remove or modify stairs, staircases, or steps. They are permanent structure.
+- NEVER remove or block any entrance, passage, archway, or opening between rooms.
+- NEVER convert a window into a door. Windows are windows — they have glass and are set higher in the wall.
+- NEVER add doors to solid walls. Only add doors where there is ALREADY a clear passage/opening you can walk through.
+- NEVER change the room layout or geometry in any way.
 
-/**
- * Step 1b: Finish raw surfaces — ceiling, floor, doors, outlets.
- */
-async function finishRoom(imageUrl: string, roomType: string): Promise<string> {
-  return fluxEdit(imageUrl,
-    `Finish the raw surfaces in this ${roomType}. NEVER cut into, break, or modify any wall. NEVER create new openings in walls.
-1. If ceiling is bare concrete, paint it smooth white.
-2. If floor is raw concrete or plywood, add finished flooring (hardwood or tiles).
-3. If there is an EXISTING open doorway (a hole in a wall that is clearly a door-sized opening with no door), place a white panel door in it. Do NOT add doors to solid walls — only to openings that already exist.
-4. Every visible electrical junction box must get a white cover plate — light switch at wall height, power outlet near floor.
-All walls must remain 100% intact — no new holes, no new doors, no modifications to any wall surface.`
+NOW, only do these surface-level cosmetic changes to this ${roomType}:
+
+1. CEILING: If raw concrete or unpainted — paint it smooth matte white. Do not modify ceiling shape or structure.
+2. FLOOR: If raw concrete, screed, or plywood — replace surface with light oak hardwood parquet. Do not change floor level or layout.
+3. WALLS: If raw/unpainted — paint smooth white. Do NOT remove or reposition any wall.
+4. DEBRIS: Remove only loose construction trash from the floor (tools, buckets, trash bags, cardboard, plastic sheets). Do NOT remove anything that is part of the building structure.
+5. LIGHTING: Add one simple modern ceiling light fixture in the center of the ceiling.
+6. ELECTRICAL: Cover exposed junction boxes with white plates.
+
+Result: a clean, freshly finished empty ${roomType} with the EXACT same room shape, walls, stairs, windows, and openings as the original photo.${userInstructions}`
   );
 }
 
 /**
  * Step 2: Use proplabs/virtual-staging — dedicated virtual staging model.
- * Handles room structure preservation and furniture placement natively.
  */
 async function stageRoom(
   cleanImageUrl: string,
   stagingStyle: string,
   stagingRoom: string
 ): Promise<string> {
-  const output = (await replicate.run(
+  return replicateRunWithRetry(
     "proplabs/virtual-staging:635d607efc6e3a6016ef6d655327cd35f3d792e84b8f110688b04498c6e94cfb",
     {
-      input: {
-        image: cleanImageUrl,
-        room: stagingRoom,
-        furniture_style: stagingStyle,
-        furniture_items: "Default (AI decides)",
-        replicate_api_key: process.env.REPLICATE_API_TOKEN,
-      },
+      image: cleanImageUrl,
+      room: stagingRoom,
+      furniture_style: stagingStyle,
+      furniture_items: "Default (AI decides)",
+      replicate_api_key: process.env.REPLICATE_API_TOKEN,
     }
-  )) as { url(): string } | string;
-
-  if (output && typeof output === "object" && "url" in output) {
-    return (output as { url(): string }).url();
-  }
-  if (typeof output === "string") {
-    return output;
-  }
-  throw new Error("No output received from staging model");
+  );
 }
 
 /**
- * Two-step virtual staging pipeline:
- * 1. Flux Kontext Pro cleans the room (removes construction items, finishes surfaces)
- * 2. proplabs/virtual-staging adds furniture (dedicated staging model)
+ * Step 3: Post-staging polish — fix common staging artifacts with Flux.
+ * Fixes: paintings leaning on floor, missing ceiling light, open doorways without doors.
+ */
+async function polishStagedRoom(imageUrl: string, roomType: string): Promise<string> {
+  return fluxEdit(imageUrl,
+    `CRITICAL: Do NOT change the room structure, walls, floor, stairs, or furniture layout. Only make these small fixes:
+
+1. PAINTINGS/ART: If any painting or framed art is on the floor or leaning against a wall — hang it on the wall at eye level. Artworks must be wall-mounted.
+
+2. CEILING LIGHT: If no ceiling light is visible — add one modern flush-mount or pendant light on the ceiling.
+
+That is all. Do NOT move furniture, do NOT modify walls, do NOT add or remove doors, do NOT change anything else. The room must look identical except for the two fixes above.`
+  );
+}
+
+/**
+ * Three-step virtual staging pipeline:
+ * 1. Flux Kontext Pro cleans the room + finishes surfaces
+ * 2. proplabs/virtual-staging adds furniture
+ * 3. Flux Kontext Pro polishes staging (fixes paintings, lights, doors)
  * Set DEMO_MODE=true in .env.local to skip API calls.
  */
+/**
+ * Refine an already-staged image with a user correction prompt.
+ * Uses Flux Kontext Pro to apply targeted fixes.
+ */
+export async function refineImage(imageUrl: string, refinementPrompt: string): Promise<string> {
+  return fluxEdit(imageUrl,
+    `CRITICAL: Do NOT change the room structure, walls, windows, or floor. Apply ONLY the following correction to this staged room photo:
+
+${refinementPrompt}
+
+Keep everything else exactly as it is. Only apply the specific change requested above.`
+  );
+}
+
 export async function generateStagedImage({
   imageUrl,
-  style,
   roomType,
   stagingStyle,
   stagingRoom,
+  customPrompt,
 }: GenerateInput): Promise<string> {
   if (DEMO_MODE) {
     await new Promise((r) => setTimeout(r, 3000));
     return DEMO_IMAGES[roomType] || DEMO_IMAGES["living-room"];
   }
 
-  // Step 1a: Remove construction debris only
-  const cleanedImageUrl = await cleanRoom(imageUrl, roomType);
+  // Step 1: Clean room + finish raw surfaces (+ custom user prompt if provided)
+  const finishedImageUrl = await cleanAndFinishRoom(imageUrl, roomType, customPrompt);
 
-  // Step 1b: Finish raw surfaces (floor, ceiling, doors, outlets)
-  const finishedImageUrl = await finishRoom(cleanedImageUrl, roomType);
+  await wait(3000);
 
   // Step 2: Stage the finished room with furniture
-  return stageRoom(finishedImageUrl, stagingStyle, stagingRoom);
+  const stagedImageUrl = await stageRoom(finishedImageUrl, stagingStyle, stagingRoom);
+
+  await wait(3000);
+
+  // Step 3: Polish — fix paintings, ceiling light, doors
+  return polishStagedRoom(stagedImageUrl, roomType);
 }

@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 
 const STEPS = [
   "Analizowanie zdjęcia...",
-  "Tworzenie mapy głębi...",
-  "Generowanie mebli...",
-  "Dopasowywanie oświetlenia...",
+  "Wykańczanie ścian, podłóg i sufitów...",
+  "Montaż drzwi i oświetlenia...",
+  "Dobieranie mebli i stylu...",
+  "Renderowanie wizualizacji...",
+  "Poprawki końcowe...",
   "Finalizowanie...",
 ];
 
@@ -17,14 +19,16 @@ export default function GenerationProgress() {
   useEffect(() => {
     const stepInterval = setInterval(() => {
       setStep((prev) => (prev < STEPS.length - 1 ? prev + 1 : prev));
-    }, 5000);
+    }, 10000);
 
     const progressInterval = setInterval(() => {
       setProgress((prev) => {
-        if (prev >= 90) return prev;
-        return prev + Math.random() * 3;
+        if (prev >= 92) return prev;
+        // Slow down as we approach the end
+        const increment = prev < 50 ? Math.random() * 2.5 : Math.random() * 1.2;
+        return prev + increment;
       });
-    }, 300);
+    }, 500);
 
     return () => {
       clearInterval(stepInterval);
@@ -38,7 +42,7 @@ export default function GenerationProgress() {
 
       <p className="text-white font-medium mb-2">{STEPS[step]}</p>
       <p className="text-sm text-[#71717a] mb-6">
-        To może zająć 15-30 sekund
+        To może zająć do 90 sekund
       </p>
 
       <div className="max-w-xs mx-auto">

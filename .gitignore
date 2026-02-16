@@ -17,6 +17,9 @@ _backup/
 .env.local
 .env.production
 
+# feedback data
+feedback.jsonl
+
 # logs
 npm-debug.log*
 yarn-debug.log*

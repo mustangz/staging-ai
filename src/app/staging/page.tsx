@@ -16,6 +16,7 @@ export default function StagingPage() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedStyle, setSelectedStyle] = useState<string | null>(null);
   const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
+  const [customPrompt, setCustomPrompt] = useState("");
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -37,6 +38,9 @@ export default function StagingPage() {
       formData.append("image", imageFile);
       formData.append("style", selectedStyle);
       formData.append("roomType", selectedRoom);
+      if (customPrompt.trim()) {
+        formData.append("customPrompt", customPrompt.trim());
+      }
 
       const response = await fetch("/api/generate", {
         method: "POST",
@@ -62,6 +66,35 @@ export default function StagingPage() {
   const handleRegenerate = () => {
     setResultUrl(null);
     setStage("configure");
+  };
+
+  const handleRefine = async (refinementPrompt: string) => {
+    if (!resultUrl) return;
+
+    setStage("generating");
+    setError(null);
+
+    try {
+      const response = await fetch("/api/refine", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imageUrl: resultUrl, prompt: refinementPrompt }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Refinement failed");
+      }
+
+      setResultUrl(data.resultUrl);
+      setStage("result");
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Wystąpił błąd. Spróbuj ponownie."
+      );
+      setStage("result");
+    }
   };
 
   const handleStartOver = () => {
@@ -198,6 +231,20 @@ export default function StagingPage() {
               onSelect={setSelectedStyle}
             />
 
+            {/* Custom prompt */}
+            <div>
+              <label className="block text-sm font-medium text-[#a1a1aa] mb-2">
+                Dodatkowe instrukcje (opcjonalne)
+              </label>
+              <textarea
+                value={customPrompt}
+                onChange={(e) => setCustomPrompt(e.target.value)}
+                placeholder="np. &quot;Podłoga z ciemnego drewna&quot;, &quot;Nie dodawaj dywanu&quot;, &quot;Ściana za kanapą w kolorze granatowym&quot;..."
+                rows={2}
+                className="w-full bg-white/[0.03] border border-white/[0.08] rounded-lg px-4 py-3 text-sm text-[#d4d4d8] placeholder:text-[#52525b] outline-none focus:border-violet-500/30 resize-none"
+              />
+            </div>
+
             {error && (
               <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 text-sm text-red-300">
                 {error}
@@ -249,6 +296,9 @@ export default function StagingPage() {
               beforeUrl={previewUrl}
               afterUrl={resultUrl}
               onRegenerate={handleRegenerate}
+              onRefine={handleRefine}
+              roomType={selectedRoom}
+              style={selectedStyle}
             />
           </div>
         )}
