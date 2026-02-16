@@ -20,16 +20,18 @@ export interface GenerateInput {
   imageUrl: string;
   style: string;
   roomType: string;
+  stagingStyle: string;
+  stagingRoom: string;
 }
 
 /**
- * Step 1: Use Flux Kontext Pro to clean the room — remove construction items,
- * ladders, buckets, debris, etc. Returns URL of cleaned image.
+ * Step 1: Use Flux Kontext Pro to clean and finish the room — remove construction
+ * items, add doors to empty frames, finish outlets, paint ceiling.
  */
 async function cleanRoom(imageUrl: string, roomType: string): Promise<string> {
   const output = (await replicate.run("black-forest-labs/flux-kontext-pro", {
     input: {
-      prompt: `Remove all construction items, ladders, buckets, paint cans, OSB boards, tools, debris, and temporary objects from this ${roomType}. Replace them with clean empty floor and walls. Keep the exact same room structure, walls, floor, ceiling, windows, doors, camera angle, and perspective. The room should look clean and empty, ready for furniture.`,
+      prompt: `Clean up and finish this ${roomType} photo for virtual staging. ONLY remove: ladders, buckets, paint cans, tools, debris, construction trash, OSB boards, and temporary objects. Finishing touches: if the ceiling is bare or unfinished, paint it white. Add white doors to any empty door frames or doorways that have no door. Replace electrical junction boxes or bare wiring with finished outlets (near floor level) or light switches (at wall height ~120cm). NEVER remove or change: walls, load-bearing walls, columns, pillars, beams, windows, door frames, radiators, pipes, flooring, stairs, railings, or any permanent structural element. Keep every wall, partition, and architectural feature exactly as it is. The room structure must remain 100% identical.`,
       input_image: imageUrl,
       aspect_ratio: "match_input_image",
       output_format: "jpg",
@@ -47,29 +49,23 @@ async function cleanRoom(imageUrl: string, roomType: string): Promise<string> {
 }
 
 /**
- * Step 2: Use adirik/interior-design — same pipeline as Interior AI.
- * Realistic Vision V3.0 + SegFormer segmentation + dual ControlNet (seg + MLSD).
- * Automatically masks structural elements (walls, windows, doors) and inpaints furniture.
+ * Step 2: Use proplabs/virtual-staging — dedicated virtual staging model.
+ * Handles room structure preservation and furniture placement natively.
  */
 async function stageRoom(
   cleanImageUrl: string,
-  style: string,
-  roomType: string
+  stagingStyle: string,
+  stagingRoom: string
 ): Promise<string> {
-  const prompt = `A beautifully furnished ${roomType}, ${style}, professional real estate photography, photorealistic, well-lit, high quality interior design`;
-  const negativePrompt =
-    "lowres, watermark, banner, logo, text, deformed, blurry, blur, out of focus, out of frame, surreal, ugly, construction materials, ladders, buckets, tools, debris";
-
   const output = (await replicate.run(
-    "adirik/interior-design:76604baddc85b1b4616e1c6475eca080da339c8875bd4996705440484a6eac38",
+    "proplabs/virtual-staging:635d607efc6e3a6016ef6d655327cd35f3d792e84b8f110688b04498c6e94cfb",
     {
       input: {
         image: cleanImageUrl,
-        prompt,
-        negative_prompt: negativePrompt,
-        guidance_scale: 15,
-        prompt_strength: 0.8,
-        num_inference_steps: 50,
+        room: stagingRoom,
+        furniture_style: stagingStyle,
+        furniture_items: "Default (AI decides)",
+        replicate_api_key: process.env.REPLICATE_API_TOKEN,
       },
     }
   )) as { url(): string } | string;
@@ -85,14 +81,16 @@ async function stageRoom(
 
 /**
  * Two-step virtual staging pipeline:
- * 1. Flux Kontext Pro cleans the room (removes construction items)
- * 2. adirik/interior-design stages furniture (segmentation + dual ControlNet inpainting)
+ * 1. Flux Kontext Pro cleans the room (removes construction items, finishes surfaces)
+ * 2. proplabs/virtual-staging adds furniture (dedicated staging model)
  * Set DEMO_MODE=true in .env.local to skip API calls.
  */
 export async function generateStagedImage({
   imageUrl,
   style,
   roomType,
+  stagingStyle,
+  stagingRoom,
 }: GenerateInput): Promise<string> {
   if (DEMO_MODE) {
     await new Promise((r) => setTimeout(r, 3000));
@@ -103,5 +101,5 @@ export async function generateStagedImage({
   const cleanedImageUrl = await cleanRoom(imageUrl, roomType);
 
   // Step 2: Stage the clean room with furniture
-  return stageRoom(cleanedImageUrl, style, roomType);
+  return stageRoom(cleanedImageUrl, stagingStyle, stagingRoom);
 }
