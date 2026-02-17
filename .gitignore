@@ -20,6 +20,10 @@ _backup/
 # feedback data
 feedback.jsonl
 
+# portfolio data (user-generated)
+data/portfolio.json
+public/portfolio/
+
 # logs
 npm-debug.log*
 yarn-debug.log*

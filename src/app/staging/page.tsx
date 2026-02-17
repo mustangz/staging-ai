@@ -135,6 +135,10 @@ export default function StagingPage() {
             </span>
           </Link>
 
+          <div className="flex items-center gap-4">
+            <Link href="/portfolio" className="text-sm text-[#a1a1aa] hover:text-white transition-colors hidden sm:block">
+              Portfolio
+            </Link>
           {stage !== "upload" && (
             <button onClick={handleStartOver} className="btn-ghost text-sm">
               <svg
@@ -153,6 +157,7 @@ export default function StagingPage() {
               Nowe zdjęcie
             </button>
           )}
+          </div>
         </div>
       </nav>
 

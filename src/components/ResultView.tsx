@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import BeforeAfter from "./BeforeAfter";
+import { INTERIOR_STYLES, ROOM_TYPES } from "@/lib/styles";
 
 const ISSUE_OPTIONS = [
   "Zmienił układ ścian",
@@ -87,8 +88,30 @@ export default function ResultView({
     );
   };
 
+  const saveToPortfolio = async () => {
+    try {
+      const room = ROOM_TYPES.find((r) => r.id === roomType);
+      const styleObj = INTERIOR_STYLES.find((s) => s.id === style);
+      await fetch("/api/portfolio", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          beforeUrl: beforeUrl,
+          afterUrl: afterUrl,
+          roomType: roomType || "unknown",
+          roomName: room?.name || roomType || "Pokój",
+          style: style || "unknown",
+          styleName: styleObj?.name || style || "Styl",
+        }),
+      });
+    } catch {
+      // Portfolio save is non-critical
+    }
+  };
+
   const handleSubmitGood = () => {
     sendFeedback("good", [], commentText.trim());
+    saveToPortfolio();
   };
 
   const handleSubmitIssues = () => {
