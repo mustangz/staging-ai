@@ -6,9 +6,9 @@ import BeforeAfter from "@/components/BeforeAfter";
 
 // A/B/C pricing variants
 const pricingVariants = {
-  A: { starter: 59, pro: 149, agency: 349 },
-  B: { starter: 79, pro: 179, agency: 449 },
-  C: { starter: 99, pro: 249, agency: 549 },
+  A: { starter: 79, pro: 197, agency: 497 },
+  B: { starter: 97, pro: 247, agency: 597 },
+  C: { starter: 127, pro: 297, agency: 747 },
 } as const;
 
 type Variant = keyof typeof pricingVariants;
@@ -586,83 +586,110 @@ export default function LandingPage({ defaultTheme = "dark" }: { defaultTheme?: 
               </span>
             </div>
           </div>
+          {/* Anchor: traditional staging cost */}
+          <div className="text-center mb-10">
+            <p className="text-sm text-text-muted">Tradycyjny staging 1 nieruchomości = <span className="line-through">3 000 – 8 000 PLN</span></p>
+          </div>
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {/* Starter */}
+            {/* Solo Agent */}
             <div className="card flex flex-col">
               <div className="mb-6">
-                <h3 className="text-lg font-semibold mb-1">Starter</h3>
-                <p className="text-sm text-text-tertiary">Dla pojedynczych agentów</p>
+                <h3 className="text-lg font-semibold mb-1">Solo Agent</h3>
+                <p className="text-sm text-text-tertiary">Do 3 nieruchomości/mies</p>
               </div>
               <div className="mb-6">
                 <div className="flex items-baseline gap-1">
                   <span className="text-4xl font-bold">{getPrice(prices.starter)}</span>
                   <span className="text-text-tertiary">PLN/mies</span>
                 </div>
-                <p className="text-xs text-text-muted mt-1">{(getPrice(prices.starter) / 10).toFixed(2).replace(".", ",")} PLN za render</p>
+                <p className="text-xs text-text-muted mt-1">= {(getPrice(prices.starter) / 3).toFixed(0)} PLN za nieruchomość</p>
               </div>
               <ul className="space-y-3 mb-8 flex-grow">
-                {["10 renderów miesięcznie", "Standardowa kolejka", "Bez watermarku", "8 stylów wnętrz"].map((f, i) => (
-                  <li key={i} className="flex items-center gap-3 text-sm"><CheckIcon /><span>{i === 0 ? <><strong className="text-text-primary">10 renderów</strong> miesięcznie</> : f}</span></li>
+                {[
+                  <><strong className="text-text-primary" key="r">15 renderów</strong> (3 nieruchomości)</>,
+                  "Wszystkie style (15+)",
+                  "HD bez watermarku",
+                  "Gotowe w 30 sekund",
+                  <span key="b" className="text-violet-400 font-medium">+ Poradnik: staging który sprzedaje</span>,
+                ].map((f, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm"><CheckIcon /><span>{f}</span></li>
                 ))}
               </ul>
-              <button onClick={() => openCheckout("Starter", prices.starter)} className="btn-secondary w-full">Wybieram Starter</button>
+              <button onClick={() => openCheckout("Solo Agent", prices.starter)} className="btn-secondary w-full">Zacznij sprzedawać szybciej</button>
             </div>
-            {/* Pro */}
+            {/* Top Agent */}
             <div className="card-featured flex flex-col relative">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                <span className="bg-violet-500 text-white text-xs font-semibold px-3 py-1 rounded-full">Najpopularniejszy</span>
+                <span className="bg-violet-500 text-white text-xs font-semibold px-3 py-1 rounded-full">Najczęściej wybierany</span>
               </div>
               <div className="mb-6 mt-2">
-                <h3 className="text-lg font-semibold mb-1">Pro</h3>
-                <p className="text-sm text-text-tertiary">Dla aktywnych agentów</p>
+                <h3 className="text-lg font-semibold mb-1">Top Agent</h3>
+                <p className="text-sm text-text-tertiary">Do 12 nieruchomości/mies</p>
               </div>
               <div className="mb-6">
                 <div className="flex items-baseline gap-1">
                   <span className="text-4xl font-bold gradient-text">{getPrice(prices.pro)}</span>
                   <span className="text-text-tertiary">PLN/mies</span>
                 </div>
-                <p className="text-xs text-text-muted mt-1">{(getPrice(prices.pro) / 50).toFixed(2).replace(".", ",")} PLN za render</p>
+                <p className="text-xs text-text-muted mt-1">= {(getPrice(prices.pro) / 12).toFixed(0)} PLN za nieruchomość</p>
               </div>
               <ul className="space-y-3 mb-8 flex-grow">
-                {[<><strong className="text-text-primary" key="r">50 renderów</strong> miesięcznie</>, <strong className="text-text-primary" key="p">Priorytetowa kolejka</strong>, "Bez watermarku", "Wszystkie style (15+)", "1 poprawka na render"].map((f, i) => (
-                  <li key={i} className="flex items-center gap-3 text-sm"><CheckIcon /><span>{f}</span></li>
+                {[
+                  <><strong className="text-text-primary" key="r">60 renderów</strong> (12 nieruchomości)</>,
+                  <strong className="text-text-primary" key="p">Priorytetowa kolejka</strong>,
+                  "2 poprawki na render",
+                  "Wszystkie style (15+)",
+                  <span key="b1" className="text-violet-400 font-medium">+ Szablony ogłoszeń ze stagingiem</span>,
+                  <span key="b2" className="text-violet-400 font-medium">+ Priorytetowe wsparcie</span>,
+                ].map((f, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm"><CheckIcon /><span>{f}</span></li>
                 ))}
               </ul>
-              <button onClick={() => openCheckout("Pro", prices.pro)} className="btn-primary w-full">
-                Wybieram Pro
+              <button onClick={() => openCheckout("Top Agent", prices.pro)} className="btn-primary w-full">
+                Wybieram Top Agent
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </button>
             </div>
-            {/* Agency */}
+            {/* Biuro */}
             <div className="card flex flex-col">
               <div className="mb-6">
-                <h3 className="text-lg font-semibold mb-1">Agency</h3>
-                <p className="text-sm text-text-tertiary">Dla biur nieruchomości</p>
+                <h3 className="text-lg font-semibold mb-1">Biuro</h3>
+                <p className="text-sm text-text-tertiary">Do 40 nieruchomości/mies</p>
               </div>
               <div className="mb-6">
                 <div className="flex items-baseline gap-1">
                   <span className="text-4xl font-bold">{getPrice(prices.agency)}</span>
                   <span className="text-text-tertiary">PLN/mies</span>
                 </div>
-                <p className="text-xs text-text-muted mt-1">{(getPrice(prices.agency) / 100).toFixed(2).replace(".", ",")} PLN za render</p>
+                <p className="text-xs text-text-muted mt-1">= {(getPrice(prices.agency) / 40).toFixed(0)} PLN za nieruchomość</p>
               </div>
               <ul className="space-y-3 mb-8 flex-grow">
-                {[<><strong className="text-text-primary" key="r">100 renderów</strong> miesięcznie</>, "Najszybsza kolejka", "Nieograniczone poprawki", "Priorytetowe wsparcie", "Faktura VAT"].map((f, i) => (
-                  <li key={i} className="flex items-center gap-3 text-sm"><CheckIcon /><span>{f}</span></li>
+                {[
+                  <><strong className="text-text-primary" key="r">200 renderów</strong> (40 nieruchomości)</>,
+                  "Najszybsza kolejka",
+                  "Nieograniczone poprawki",
+                  "Do 5 kont agentów",
+                  "Faktura VAT",
+                  <span key="b1" className="text-violet-400 font-medium">+ Dedykowany opiekun</span>,
+                  <span key="b2" className="text-violet-400 font-medium">+ Onboarding dla zespołu</span>,
+                ].map((f, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm"><CheckIcon /><span>{f}</span></li>
                 ))}
               </ul>
-              <button onClick={() => openCheckout("Agency", prices.agency)} className="btn-secondary w-full">Wybieram Agency</button>
+              <button onClick={() => openCheckout("Biuro", prices.agency)} className="btn-secondary w-full">Umów prezentację</button>
             </div>
           </div>
-          <div className="text-center mt-12">
+          {/* Guarantee + anchor */}
+          <div className="text-center mt-12 space-y-4">
             <div className="inline-flex items-center gap-2 text-sm text-text-tertiary">
               <svg className="w-4 h-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
-              <span>14-dniowa gwarancja zwrotu 100% bez pytań</span>
+              <span>Gwarancja: Jeśli nie zobaczysz wzrostu zapytań w 30 dni — zwrot 100% bez pytań</span>
             </div>
+            <p className="text-xs text-text-muted">Jedna dodatkowa sprzedaż = 5 000–15 000 PLN prowizji. Plan Top Agent zwraca się po pierwszym zamknięciu.</p>
           </div>
         </div>
       </section>
