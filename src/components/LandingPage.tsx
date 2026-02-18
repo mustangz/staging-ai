@@ -586,9 +586,20 @@ export default function LandingPage({ defaultTheme = "dark" }: { defaultTheme?: 
               </span>
             </div>
           </div>
-          {/* Anchor: traditional staging cost */}
-          <div className="text-center mb-10">
-            <p className="text-sm text-text-muted">Tradycyjny staging 1 nieruchomości = <span className="line-through">3 000 – 8 000 PLN</span></p>
+          {/* Anchor: traditional staging cost + time */}
+          <div className="flex flex-wrap justify-center gap-6 mb-10">
+            <div className="flex items-center gap-2 text-sm text-text-muted">
+              <svg className="w-4 h-4 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8V7m0 10v1" /></svg>
+              Tradycyjny staging = <span className="line-through text-red-400 mx-1">3 000 – 8 000 PLN</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-text-muted">
+              <svg className="w-4 h-4 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              Czas realizacji = <span className="line-through text-red-400 mx-1">3–7 dni</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-violet-400 font-medium">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+              WnetrzeAI = 30 sekund, od {prices.starter} PLN/mies
+            </div>
           </div>
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {/* Solo Agent */}
