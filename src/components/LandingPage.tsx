@@ -615,17 +615,28 @@ export default function LandingPage({ defaultTheme = "dark" }: { defaultTheme?: 
                 </div>
                 <p className="text-xs text-text-muted mt-1">= {(getPrice(prices.starter) / 3).toFixed(0)} PLN za nieruchomość</p>
               </div>
-              <ul className="space-y-3 mb-8 flex-grow">
+              <ul className="space-y-3 mb-6 flex-grow">
                 {[
                   <><strong className="text-text-primary" key="r">15 renderów</strong> (3 nieruchomości)</>,
                   "Wszystkie style (15+)",
                   "HD bez watermarku",
                   "Gotowe w 30 sekund",
-                  <span key="b" className="text-violet-400 font-medium">+ Poradnik: staging który sprzedaje</span>,
                 ].map((f, i) => (
                   <li key={i} className="flex items-start gap-3 text-sm"><CheckIcon /><span>{f}</span></li>
                 ))}
               </ul>
+              {/* Value stack */}
+              <div className="border-t border-border pt-4 mb-6 space-y-2">
+                <p className="text-xs font-semibold text-text-tertiary uppercase tracking-wider">Bonusy w cenie:</p>
+                <div className="flex justify-between text-xs">
+                  <span className="text-violet-400">Poradnik: staging który sprzedaje</span>
+                  <span className="text-text-muted line-through">97 PLN</span>
+                </div>
+              </div>
+              <div className="bg-bg-tertiary rounded-lg p-3 mb-6 text-center">
+                <p className="text-xs text-text-muted">Wartość pakietu: <span className="line-through">297 PLN</span></p>
+                <p className="text-sm font-bold text-text-primary">Twoja cena: {getPrice(prices.starter)} PLN/mies</p>
+              </div>
               <button onClick={() => openCheckout("Solo Agent", prices.starter)} className="btn-secondary w-full">Zacznij sprzedawać szybciej</button>
             </div>
             {/* Top Agent */}
@@ -644,18 +655,36 @@ export default function LandingPage({ defaultTheme = "dark" }: { defaultTheme?: 
                 </div>
                 <p className="text-xs text-text-muted mt-1">= {(getPrice(prices.pro) / 12).toFixed(0)} PLN za nieruchomość</p>
               </div>
-              <ul className="space-y-3 mb-8 flex-grow">
+              <ul className="space-y-3 mb-6 flex-grow">
                 {[
                   <><strong className="text-text-primary" key="r">60 renderów</strong> (12 nieruchomości)</>,
                   <strong className="text-text-primary" key="p">Priorytetowa kolejka</strong>,
                   "2 poprawki na render",
                   "Wszystkie style (15+)",
-                  <span key="b1" className="text-violet-400 font-medium">+ Szablony ogłoszeń ze stagingiem</span>,
-                  <span key="b2" className="text-violet-400 font-medium">+ Priorytetowe wsparcie</span>,
                 ].map((f, i) => (
                   <li key={i} className="flex items-start gap-3 text-sm"><CheckIcon /><span>{f}</span></li>
                 ))}
               </ul>
+              {/* Value stack */}
+              <div className="border-t border-border pt-4 mb-6 space-y-2">
+                <p className="text-xs font-semibold text-text-tertiary uppercase tracking-wider">Bonusy w cenie:</p>
+                <div className="flex justify-between text-xs">
+                  <span className="text-violet-400">Poradnik: staging który sprzedaje</span>
+                  <span className="text-text-muted line-through">97 PLN</span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-violet-400">Szablony ogłoszeń ze stagingiem</span>
+                  <span className="text-text-muted line-through">197 PLN</span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-violet-400">Priorytetowe wsparcie</span>
+                  <span className="text-text-muted line-through">97 PLN</span>
+                </div>
+              </div>
+              <div className="bg-violet-500/10 border border-violet-500/20 rounded-lg p-3 mb-6 text-center">
+                <p className="text-xs text-text-muted">Wartość pakietu: <span className="line-through">988 PLN</span></p>
+                <p className="text-sm font-bold gradient-text">Twoja cena: {getPrice(prices.pro)} PLN/mies</p>
+              </div>
               <button onClick={() => openCheckout("Top Agent", prices.pro)} className="btn-primary w-full">
                 Wybieram Top Agent
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -676,31 +705,78 @@ export default function LandingPage({ defaultTheme = "dark" }: { defaultTheme?: 
                 </div>
                 <p className="text-xs text-text-muted mt-1">= {(getPrice(prices.agency) / 40).toFixed(0)} PLN za nieruchomość</p>
               </div>
-              <ul className="space-y-3 mb-8 flex-grow">
+              <ul className="space-y-3 mb-6 flex-grow">
                 {[
                   <><strong className="text-text-primary" key="r">200 renderów</strong> (40 nieruchomości)</>,
                   "Najszybsza kolejka",
                   "Nieograniczone poprawki",
                   "Do 5 kont agentów",
                   "Faktura VAT",
-                  <span key="b1" className="text-violet-400 font-medium">+ Dedykowany opiekun</span>,
-                  <span key="b2" className="text-violet-400 font-medium">+ Onboarding dla zespołu</span>,
                 ].map((f, i) => (
                   <li key={i} className="flex items-start gap-3 text-sm"><CheckIcon /><span>{f}</span></li>
                 ))}
               </ul>
+              {/* Value stack */}
+              <div className="border-t border-border pt-4 mb-6 space-y-2">
+                <p className="text-xs font-semibold text-text-tertiary uppercase tracking-wider">Bonusy w cenie:</p>
+                <div className="flex justify-between text-xs">
+                  <span className="text-violet-400">Poradnik: staging który sprzedaje</span>
+                  <span className="text-text-muted line-through">97 PLN</span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-violet-400">Szablony ogłoszeń ze stagingiem</span>
+                  <span className="text-text-muted line-through">197 PLN</span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-violet-400">Dedykowany opiekun konta</span>
+                  <span className="text-text-muted line-through">297 PLN</span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-violet-400">Onboarding dla zespołu (1h)</span>
+                  <span className="text-text-muted line-through">497 PLN</span>
+                </div>
+              </div>
+              <div className="bg-bg-tertiary rounded-lg p-3 mb-6 text-center">
+                <p className="text-xs text-text-muted">Wartość pakietu: <span className="line-through">2 485 PLN</span></p>
+                <p className="text-sm font-bold text-text-primary">Twoja cena: {getPrice(prices.agency)} PLN/mies</p>
+              </div>
               <button onClick={() => openCheckout("Biuro", prices.agency)} className="btn-secondary w-full">Umów prezentację</button>
             </div>
           </div>
-          {/* Guarantee + anchor */}
-          <div className="text-center mt-12 space-y-4">
-            <div className="inline-flex items-center gap-2 text-sm text-text-tertiary">
-              <svg className="w-4 h-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
-              <span>Gwarancja: Jeśli nie zobaczysz wzrostu zapytań w 30 dni — zwrot 100% bez pytań</span>
+          {/* Guarantee */}
+          <div className="max-w-2xl mx-auto mt-14">
+            <div className="card-gradient text-center">
+              <div className="w-14 h-14 rounded-full bg-green-500/10 flex items-center justify-center mx-auto mb-4">
+                <svg className="w-7 h-7 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-bold mb-2">Gwarancja 30 dni albo zwrot 100%</h3>
+              <p className="text-sm text-text-secondary mb-4">
+                Jeśli nie zobaczysz wzrostu zapytań w ciągu 30 dni — oddajemy każdą złotówkę. Bez pytań, bez formalności. Ryzyko jest po naszej stronie.
+              </p>
+              <div className="flex flex-wrap justify-center gap-4 text-xs text-text-muted">
+                <span className="flex items-center gap-1.5">
+                  <CheckIcon />
+                  Bez ukrytych warunków
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <CheckIcon />
+                  Zwrot w 48h
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <CheckIcon />
+                  Anuluj kiedy chcesz
+                </span>
+              </div>
             </div>
-            <p className="text-xs text-text-muted">Jedna dodatkowa sprzedaż = 5 000–15 000 PLN prowizji. Plan Top Agent zwraca się po pierwszym zamknięciu.</p>
+          </div>
+          {/* ROI anchor */}
+          <div className="text-center mt-8 space-y-2">
+            <p className="text-sm text-text-secondary">
+              <strong className="text-text-primary">1 dodatkowa sprzedaż = 5 000–15 000 PLN prowizji.</strong>
+            </p>
+            <p className="text-xs text-text-muted">Plan Top Agent kosztuje mniej niż jedna kawa dziennie — a zwraca się po pierwszym zamknięciu.</p>
           </div>
         </div>
       </section>
