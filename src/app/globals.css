@@ -358,12 +358,13 @@ body {
   transform-box: fill-box;
 }
 
-.bp-f1 { animation: bp-materialize 0.6s ease-out 2.2s forwards; }
-.bp-f2 { animation: bp-materialize 0.6s ease-out 2.8s forwards; }
-.bp-f3 { animation: bp-materialize 0.6s ease-out 3.4s forwards; }
-.bp-f4 { animation: bp-materialize 0.6s ease-out 4.0s forwards; }
-.bp-f5 { animation: bp-materialize 0.6s ease-out 4.6s forwards; }
-.bp-f6 { animation: bp-materialize 0.6s ease-out 5.2s forwards; }
+/* Delays synced with scan line position (scan starts 1.8s, 3s top-to-bottom) */
+.bp-f4 { animation: bp-materialize 0.5s ease-out 2.1s forwards; }  /* TV y=100 */
+.bp-f3 { animation: bp-materialize 0.5s ease-out 2.3s forwards; }  /* Lamp y=120 */
+.bp-f6 { animation: bp-materialize 0.5s ease-out 3.1s forwards; }  /* Rug y=220 */
+.bp-f2 { animation: bp-materialize 0.5s ease-out 3.2s forwards; }  /* Coffee table y=240 */
+.bp-f1 { animation: bp-materialize 0.5s ease-out 3.7s forwards; }  /* Sofa y=300 */
+.bp-f5 { animation: bp-materialize 0.5s ease-out 3.8s forwards; }  /* Plant y=315 */
 
 @keyframes bp-fade-in {
   from { opacity: 0; }
