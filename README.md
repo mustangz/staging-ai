@@ -1,43 +1,43 @@
-# Astro Starter Kit: Minimal
+# WnetrzeAI — AI Virtual Staging
 
-```sh
-npm create astro@latest -- --template minimal
+Jedyne polskojęzyczne narzędzie do AI virtual stagingu dla agentów nieruchomości.
+
+## Stack
+
+- **Framework**: Next.js 15 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS 4
+- **AI Pipeline**: Replicate (Flux Kontext Pro → FLUX Fill Pro → polish → Real-ESRGAN)
+- **Image Processing**: sharp
+- **Analytics**: Vercel Analytics
+- **Deploy**: Vercel
+
+## Funkcje
+
+- AI Virtual Staging — dodawanie mebli do zdjęć pustych wnętrz
+- 6 stylów wnętrz (nowoczesny, skandynawski, klasyczny, industrialny, minimalistyczny, boho)
+- 8 typów pomieszczeń
+- Before/After slider
+- Refinement (poprawki po generacji)
+- Feedback loop (JSONL)
+- Portfolio gallery z filtrami
+- Dark/Light theme
+- Free tier (3 rendery/miesiąc) z watermarkiem
+
+## Uruchomienie
+
+```bash
+npm install
+npm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Zmienne środowiskowe
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```
+REPLICATE_API_TOKEN=...
+DEMO_MODE=true  # opcjonalne, zwraca sample images
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Domena
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+[wnetrzeai.pl](https://wnetrzeai.pl)

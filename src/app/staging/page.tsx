@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import ImageUpload from "@/components/ImageUpload";
 import StyleSelector from "@/components/StyleSelector";
 import RoomTypeSelector from "@/components/RoomTypeSelector";
 import GenerationProgress from "@/components/GenerationProgress";
 import ResultView from "@/components/ResultView";
+import UpgradePrompt from "@/components/UpgradePrompt";
+import { getRemainingRenders, canRender, incrementUsage, FREE_RENDER_LIMIT } from "@/lib/usage";
 
 type Stage = "upload" | "configure" | "generating" | "result";
 
@@ -19,6 +21,12 @@ export default function StagingPage() {
   const [customPrompt, setCustomPrompt] = useState("");
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [remaining, setRemaining] = useState(FREE_RENDER_LIMIT);
+  const [showUpgrade, setShowUpgrade] = useState(false);
+
+  useEffect(() => {
+    setRemaining(getRemainingRenders());
+  }, [stage]);
 
   const handleImageSelected = (file: File, url: string) => {
     setImageFile(file);
@@ -29,6 +37,11 @@ export default function StagingPage() {
 
   const handleGenerate = async () => {
     if (!imageFile || !selectedStyle || !selectedRoom) return;
+
+    if (!canRender()) {
+      setShowUpgrade(true);
+      return;
+    }
 
     setStage("generating");
     setError(null);
@@ -54,6 +67,8 @@ export default function StagingPage() {
       }
 
       setResultUrl(data.resultUrl);
+      incrementUsage();
+      setRemaining(getRemainingRenders());
       setStage("result");
     } catch (err) {
       setError(
@@ -163,6 +178,20 @@ export default function StagingPage() {
 
       {/* Main content */}
       <main className="max-w-3xl mx-auto px-6 pt-28 pb-16">
+        {/* Usage badge */}
+        <div className="flex justify-center mb-6">
+          <div className={`inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-full border ${
+            remaining > 0
+              ? "bg-violet-500/10 text-violet-300 border-violet-500/30"
+              : "bg-red-500/10 text-red-300 border-red-500/30"
+          }`}>
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            Pozostało {remaining}/{FREE_RENDER_LIMIT} renderów
+          </div>
+        </div>
+
         {/* Steps indicator */}
         <div className="flex items-center justify-center gap-2 mb-10">
           {["Zdjęcie", "Konfiguracja", "Generowanie", "Wynik"].map(
@@ -308,6 +337,8 @@ export default function StagingPage() {
           </div>
         )}
       </main>
+
+      {showUpgrade && <UpgradePrompt onClose={() => setShowUpgrade(false)} />}
     </div>
   );
 }

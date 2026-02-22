@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import BeforeAfter from "./BeforeAfter";
 import { INTERIOR_STYLES, ROOM_TYPES } from "@/lib/styles";
 
@@ -23,6 +23,50 @@ interface ResultViewProps {
   onRefine?: (prompt: string) => void;
   roomType?: string | null;
   style?: string | null;
+  isFree?: boolean;
+}
+
+function addWatermark(imageUrl: string): Promise<string> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) { resolve(imageUrl); return; }
+
+      ctx.drawImage(img, 0, 0);
+
+      // Diagonal watermark pattern
+      ctx.save();
+      const fontSize = Math.max(24, Math.min(img.width, img.height) * 0.05);
+      ctx.font = `bold ${fontSize}px sans-serif`;
+      ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+
+      const text = "WnetrzeAI.pl";
+      const stepX = fontSize * 10;
+      const stepY = fontSize * 5;
+
+      ctx.translate(img.width / 2, img.height / 2);
+      ctx.rotate(-Math.PI / 6);
+
+      for (let y = -img.height; y < img.height * 2; y += stepY) {
+        for (let x = -img.width; x < img.width * 2; x += stepX) {
+          ctx.fillText(text, x - img.width / 2, y - img.height / 2);
+        }
+      }
+
+      ctx.restore();
+
+      resolve(canvas.toDataURL("image/jpeg", 0.92));
+    };
+    img.onerror = () => resolve(imageUrl);
+    img.src = imageUrl;
+  });
 }
 
 export default function ResultView({
@@ -32,6 +76,7 @@ export default function ResultView({
   onRefine,
   roomType,
   style,
+  isFree = true,
 }: ResultViewProps) {
   const [feedbackState, setFeedbackState] = useState<
     "idle" | "good-comment" | "bad-details" | "sent"
@@ -40,9 +85,13 @@ export default function ResultView({
   const [commentText, setCommentText] = useState("");
   const [refinePrompt, setRefinePrompt] = useState("");
 
-  const handleDownload = async () => {
+  const handleDownload = useCallback(async () => {
     try {
-      const response = await fetch(afterUrl);
+      let downloadUrl = afterUrl;
+      if (isFree) {
+        downloadUrl = await addWatermark(afterUrl);
+      }
+      const response = await fetch(downloadUrl);
       const blob = await response.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -55,7 +104,7 @@ export default function ResultView({
     } catch {
       window.open(afterUrl, "_blank");
     }
-  };
+  }, [afterUrl, isFree]);
 
   const sendFeedback = async (
     rating: "good" | "bad",
@@ -120,7 +169,19 @@ export default function ResultView({
 
   return (
     <div>
-      <BeforeAfter beforeUrl={beforeUrl} afterUrl={afterUrl} />
+      {/* Before/After with watermark overlay for free tier */}
+      <div className="relative">
+        <BeforeAfter beforeUrl={beforeUrl} afterUrl={afterUrl} />
+        {isFree && (
+          <div className="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden rounded-xl" aria-hidden="true">
+            <div className="absolute inset-0 flex items-center justify-center" style={{ transform: "rotate(-25deg)" }}>
+              <span className="text-white/[0.12] text-4xl sm:text-5xl font-bold whitespace-nowrap select-none">
+                WnetrzeAI.pl
+              </span>
+            </div>
+          </div>
+        )}
+      </div>
 
       <div className="flex gap-4 mt-6">
         <button onClick={handleDownload} className="btn-primary flex-1">
@@ -137,7 +198,7 @@ export default function ResultView({
               d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
             />
           </svg>
-          Pobierz wynik
+          Pobierz wynik{isFree ? " (z watermarkiem)" : ""}
         </button>
         <button onClick={onRegenerate} className="btn-secondary">
           <svg
